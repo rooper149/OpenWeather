@@ -11,7 +11,7 @@ namespace OpenWeather
 
         #region META
 
-        public string Name { get; private set; }
+        public double Elevation { get; private set; }
         public string Country { get; private set; }
         public string Region { get; private set; }
         public string City { get; private set; }
@@ -31,11 +31,11 @@ namespace OpenWeather
             LookupUrl = GenerateLoopupUrl(ICAO);
         }
 
-        public Station(string icao, double latitude, double logitude, string name, string country, string region,
+        public Station(string icao, double latitude, double logitude, double elevation, string country, string region,
             string city)
         {
             ICAO = icao;
-            Name = name;
+            Elevation = elevation;
             Country = country;
             Region = region;
             City = city;
