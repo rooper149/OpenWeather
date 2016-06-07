@@ -1,4 +1,7 @@
-﻿using System;
+﻿//#define USE_PERSISTANT_LIST
+
+using System;
+using System.Collections.Generic;
 using System.Linq;
 #if !ANDROID
 using System.Device.Location;
@@ -16,15 +19,24 @@ namespace OpenWeather
         private StationList() {}
         public static StationList Instance => _lazy.Value;
 
+#if USE_PERSISTANT_LIST
+        private readonly List<Station> stations = new StationCollection().Stations;
+#endif
         public Station Lookup(string icao)
         {
+
+#if !USE_PERSISTANT_LIST
             var stations = new StationCollection().Stations;
+#endif
+
             return stations.FirstOrDefault(s => s.ICAO == icao);
         }
 
         public Station Lookup(double latitude, double longitude)
         {
+#if !USE_PERSISTANT_LIST
             var stations = new StationCollection().Stations;
+#endif
 #if !ANDROID
             var location = new GeoCoordinate(latitude, longitude);
 #else
