@@ -35,6 +35,17 @@ namespace OpenWeather
                 TimeSpan.FromSeconds(UPDATE_INTERVAL));
         }
 
+        public LocationWeather(string apiprovider, double latitude, double longitude, Units units)
+        {
+            var icao = new WebClient().DownloadString($"{apiprovider}Search/?lat={latitude}&lngt={longitude}");
+            Station = new Station(icao, latitude, longitude);
+            Units = units;
+            Update();
+
+            new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
+                TimeSpan.FromSeconds(UPDATE_INTERVAL));
+        }
+
         public Station Station { get; }
         public Weather Weather { get; private set; }
         public Units Units { get; private set; }
