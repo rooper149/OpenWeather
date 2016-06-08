@@ -60,16 +60,17 @@ namespace OpenWeather
         /// </summary>
         /// <param name="station">METAR compliant weather station</param>
         /// <param name="units">Units of measurement for data retrieved</param>
-        public LocationWeather(Station station, Units units)
+        /// <param name="updateNow">Updates the weather data during object creation</param>
+        public LocationWeather(Station station, Units units, bool updateNow = true)
         {
             Station = station;
             Units = units;
-            Update();
+
+            if(updateNow)
+                Update();
 
             updateIntervalTimer = new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
                 TimeSpan.FromSeconds(UPDATE_INTERVAL));
-
-            Update();
         }
 
         /// <summary>
@@ -80,17 +81,18 @@ namespace OpenWeather
         /// <param name="latitude">Latitude of the location requesting METAR data</param>
         /// <param name="longitude">Longitude of the location requesting METAR data</param>
         /// <param name="units">Units of measurement for data retrieved</param>
-        public LocationWeather(string apiprovider, double latitude, double longitude, Units units)
+        /// <param name="updateNow">Updates the weather data during object creation</param>
+        public LocationWeather(string apiprovider, double latitude, double longitude, Units units, bool updateNow = true)
         {
             var icao = new WebClient().DownloadString($"{apiprovider}Search/?lat={latitude}&lngt={longitude}");
             Station = new Station(icao, latitude, longitude);
             Units = units;
-            Update();
+
+            if(updateNow)
+                Update();
 
             updateIntervalTimer = new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
                 TimeSpan.FromSeconds(UPDATE_INTERVAL));
-
-            Update();
         }
 
         /// <summary>
