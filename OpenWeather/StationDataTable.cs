@@ -42,8 +42,7 @@ namespace OpenWeather
 
         public Station GetStation(string icao)
         {
-            var row = Stations.AsEnumerable()
-                .SingleOrDefault(r => r.Field<string>("ICAO") == icao);
+            var row = Stations.Rows.Cast<DataRow>().ToList().SingleOrDefault(r => (string) r["ICAO"] == icao);
 
             return new Station((string) row["ICAO"], (double) row["Latitude"], (double) row["Longitude"],
                 (double) row["Elevation"],
