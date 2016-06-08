@@ -23,6 +23,7 @@ namespace OpenWeather
 
     public class LocationWeather
     {
+        private readonly Timer updateIntervalTimer;
         private const int UPDATE_INTERVAL = 600;
 
         public LocationWeather(Station station, Units units)
@@ -31,8 +32,10 @@ namespace OpenWeather
             Units = units;
             Update();
 
-            new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
+            updateIntervalTimer = new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
                 TimeSpan.FromSeconds(UPDATE_INTERVAL));
+
+            Update();
         }
 
         public LocationWeather(string apiprovider, double latitude, double longitude, Units units)
@@ -42,8 +45,16 @@ namespace OpenWeather
             Units = units;
             Update();
 
-            new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
+            updateIntervalTimer = new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
                 TimeSpan.FromSeconds(UPDATE_INTERVAL));
+
+            Update();
+        }
+
+        public void SetUpdateInterval(int minutes)
+        {
+            var seconds = minutes*60;
+            updateIntervalTimer.Change(seconds, seconds);
         }
 
         public Station Station { get; }
@@ -98,6 +109,8 @@ namespace OpenWeather
                 Updated?.Invoke(this,
                     new LocationUpdateEventArgs(
                         $"Unable to update current weather conditions for {Station.ICAO} at {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}, {ex.Message}"));
+                throw new WeatherUpdateException($"Unable to update current weather conditions for {Station.ICAO} at {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}", ex);
+
             }
         }
 
@@ -127,5 +140,16 @@ namespace OpenWeather
             Visibility = visibility;
             SkyConditions = skyconditions;
         }
+    }
+
+    public class WeatherUpdateException : Exception
+    {
+        public WeatherUpdateException() {}
+
+        public WeatherUpdateException(string message)
+            : base(message) {}
+
+        public WeatherUpdateException(string message, Exception inner)
+            : base(message, inner) {}
     }
 }
