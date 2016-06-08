@@ -5,19 +5,37 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenWeather", "OpenWeather\OpenWeather.csproj", "{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Android|Any CPU = Android|Any CPU
+		Debug|Any CPU = Debug|Any CPU
 		Linux|Any CPU = Linux|Any CPU
+		Release|Any CPU = Release|Any CPU
 		Windows|Any CPU = Windows|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Android|Any CPU.ActiveCfg = Android|Any CPU
 		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Android|Any CPU.Build.0 = Android|Any CPU
+		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Linux|Any CPU.ActiveCfg = Linux|Any CPU
 		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Linux|Any CPU.Build.0 = Linux|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Windows|Any CPU.ActiveCfg = Windows|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Windows|Any CPU.Build.0 = Windows|Any CPU
+		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Release|Any CPU.ActiveCfg = Linux|Any CPU
+		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Release|Any CPU.Build.0 = Linux|Any CPU
+		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Windows|Any CPU.Build.0 = Debug|Any CPU
+		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Android|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Android|Any CPU.Build.0 = Debug|Any CPU
+		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Linux|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Linux|Any CPU.Build.0 = Debug|Any CPU
+		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Windows|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

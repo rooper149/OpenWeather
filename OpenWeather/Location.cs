@@ -159,7 +159,7 @@ namespace OpenWeather
                 var temp = Convert.ToDouble(XmlTools.GetElementContent("temp_c", doc, "data", "METAR"));
                 var windSpeed = Convert.ToDouble(XmlTools.GetElementContent("wind_speed_kt", doc, "data", "METAR"));
                 var pressure =
-                    Convert.ToDouble(XmlTools.GetElementContent("sea_level_pressure_mb", doc, "data", "METAR"));
+                    Convert.ToDouble(XmlTools.GetElementContent("altim_in_hg", doc, "data", "METAR")) / 0.0393700732914;
                 var windHeading = Convert.ToInt32(XmlTools.GetElementContent("wind_dir_degrees", doc, "data", "METAR"));
                 var dewpoint = Convert.ToDouble(XmlTools.GetElementContent("dewpoint_c", doc, "data", "METAR"));
                 var visibility =
@@ -168,7 +168,7 @@ namespace OpenWeather
 
                 temp = Temperature.From(temp, TemperatureUnit.DegreeCelsius).As(Units.TemperatureUnit);
                 windSpeed = Speed.From(windSpeed, SpeedUnit.Knot).As(Units.WindSpeedUnit);
-                pressure = Pressure.From(pressure, PressureUnit.Millibar).As(Units.PressureUnit);
+                pressure = Pressure.From(pressure, PressureUnit.Torr).As(Units.PressureUnit);
                 visibility = Length.From(visibility, LengthUnit.Mile).As(Units.VisibilityUnit);
 
                 Weather = new Weather(temp, dewpoint, windSpeed, windHeading, pressure, visibility, skyconditions);

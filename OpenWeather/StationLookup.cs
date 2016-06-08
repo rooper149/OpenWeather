@@ -1,4 +1,7 @@
 ﻿using System;
+#if !ANDROID
+using System.Device.Location;
+#endif
 
 namespace OpenWeather
 {
