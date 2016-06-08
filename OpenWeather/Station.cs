@@ -19,6 +19,11 @@ namespace OpenWeather
         /// </summary>
         public string LookupUrl => GenerateLoopupUrl(ICAO);
 
+        /// <summary>
+        /// Defines how many hours of observation this station should request.
+        /// </summary>
+        public int HoursOfData { get; private set; }
+
         #region META
 
         /// <summary>
@@ -66,6 +71,7 @@ namespace OpenWeather
         public Station(string icao, double latitude, double logitude)
         {
             ICAO = icao;
+            HoursOfData = 24;
             Location = new GeoCoordinate(latitude, logitude);
         }
 
@@ -83,22 +89,39 @@ namespace OpenWeather
             string name)
         {
             ICAO = icao;
-            Elevation = elevation;
-            Country = country;
-            Region = region;
             Name = name;
+            Region = region;
+            HoursOfData = 24;
+            Country = country;
+            Elevation = elevation;
             Location = new GeoCoordinate(latitude, logitude);
         }
+
+        /// <summary>
+        /// Sets the number of hours of onservations to collect.
+        /// </summary>
+        /// <param name="hours">Number of hours</param>
+        public void SetHoursOfData(int hours) => HoursOfData = hours;
 
         /// <summary>
         /// Method to generate the METAR lookup url
         /// </summary>
         /// <param name="icao">ICAO code for the weather station</param>
         /// <returns>URL too lookup 24 hours of METAR data from NOAA</returns>
-        private static string GenerateLoopupUrl(string icao)
+        private string GenerateLoopupUrl(string icao)
             =>
-                $"https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={icao}&hoursBeforeNow=24";
-    }
+                $"https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={icao}&hoursBeforeNow={HoursOfData}";
+
+        /// <summary>
+        /// Static method to generate the METAR lookup url
+        /// </summary>
+        /// <param name="icao">ICAO code for the weather station</param>
+        /// <param name="hours">Hours of data to collect</param>
+        /// <returns>URL too lookup 24 hours of METAR data from NOAA</returns>
+        private static string GenerateLoopupUrl(string icao, int hours = 24)
+        =>
+            $"https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={icao}&hoursBeforeNow={hours}";
+}
 
 #if ANDROID
 
