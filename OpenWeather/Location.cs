@@ -7,25 +7,59 @@ using UnitsNet.Units;
 
 namespace OpenWeather
 {
+    /// <summary>
+    /// Delegate for LocationWeatherUpdated event
+    /// </summary>
+    /// <param name="source">Source object</param>
+    /// <param name="e">EventArgs</param>
     public delegate void LocationWeatherUpdated(object source, LocationUpdateEventArgs e);
 
+    /// <summary>
+    /// EventArgs for LocationWeatherUpdated event
+    /// </summary>
     public class LocationUpdateEventArgs : EventArgs
     {
+        /// <summary>
+        /// Contains information about the event
+        /// </summary>
         private readonly string eventInfo;
 
-        public LocationUpdateEventArgs(string text)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="info">Information about the event</param>
+        public LocationUpdateEventArgs(string info)
         {
-            eventInfo = text;
+            eventInfo = info;
         }
 
+        /// <summary>
+        /// Accessor for eventInfo
+        /// </summary>
+        /// <returns>Returns information about the event</returns>
         public string GetInfo() => eventInfo;
     }
 
+    /// <summary>
+    /// Class to handle the retrival of METAR data from a weather station
+    /// </summary>
     public class LocationWeather
     {
+        /// <summary>
+        /// Timer for updating weather data from NOAA
+        /// </summary>
         private readonly Timer updateIntervalTimer;
+
+        /// <summary>
+        /// Default interval that updateIntervalTimer runs at
+        /// </summary>
         private const int UPDATE_INTERVAL = 600;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="station">METAR compliant weather station</param>
+        /// <param name="units">Units of measurement for data retrieved</param>
         public LocationWeather(Station station, Units units)
         {
             Station = station;
@@ -38,6 +72,14 @@ namespace OpenWeather
             Update();
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="apiprovider">URL of site hosting an OpenICAO api excluding the /Search/?lat=double&lngt=double part.
+        /// See https://github.com/rooper149/OpenICAO for information about OpenICAO</param>
+        /// <param name="latitude">Latitude of the location requesting METAR data</param>
+        /// <param name="longitude">Longitude of the location requesting METAR data</param>
+        /// <param name="units">Units of measurement for data retrieved</param>
         public LocationWeather(string apiprovider, double latitude, double longitude, Units units)
         {
             var icao = new WebClient().DownloadString($"{apiprovider}Search/?lat={latitude}&lngt={longitude}");
@@ -51,17 +93,40 @@ namespace OpenWeather
             Update();
         }
 
+        /// <summary>
+        /// Method to change the interval updateIntervalTimer runs at.
+        /// </summary>
+        /// <param name="minutes"></param>
         public void SetUpdateInterval(int minutes)
         {
-            var seconds = minutes*60;
+            var seconds = minutes * 60;
             updateIntervalTimer.Change(seconds, seconds);
         }
 
+        /// <summary>
+        /// METAR compliant weather station
+        /// </summary>
         public Station Station { get; }
+
+        /// <summary>
+        /// Holds current weather at the station
+        /// </summary>
         public Weather Weather { get; private set; }
+
+        /// <summary>
+        /// Holds the unit preferences for the data
+        /// </summary>
         public Units Units { get; private set; }
+
+        /// <summary>
+        /// Event to notify when weather data has being retrieved
+        /// </summary>
         public event LocationWeatherUpdated Updated;
 
+        /// <summary>
+        /// Changes the unit preferences for the data
+        /// </summary>
+        /// <param name="units"></param>
         public void ChangeUnits(Units units)
         {
             Weather = new Weather(
@@ -76,14 +141,21 @@ namespace OpenWeather
                     $"Updated units for {Station.ICAO} at {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}"));
         }
 
+        /// <summary>
+        /// Called when updateIntervalTimer's interval elapses
+        /// </summary>
+        /// <param name="state">null</param>
         private void _timer_Elapsed(object state) => Update();
 
+        /// <summary>
+        /// Gets and parses METAR data from NOAA
+        /// </summary>
         public void Update()
         {
             try
             {
                 var wc = new WebClient();
-                var doc = XDocument.Parse(wc.DownloadString(RequestBuilder(Station.ICAO)));
+                var doc = XDocument.Parse(wc.DownloadString(Station.LookupUrl));
                 var temp = Convert.ToDouble(XmlTools.GetElementContent("temp_c", doc, "data", "METAR"));
                 var windSpeed = Convert.ToDouble(XmlTools.GetElementContent("wind_speed_kt", doc, "data", "METAR"));
                 var pressure =
@@ -109,26 +181,63 @@ namespace OpenWeather
                 Updated?.Invoke(this,
                     new LocationUpdateEventArgs(
                         $"Unable to update current weather conditions for {Station.ICAO} at {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}, {ex.Message}"));
-                throw new WeatherUpdateException($"Unable to update current weather conditions for {Station.ICAO} at {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}", ex);
-
+                throw new WeatherUpdateException(
+                    $"Unable to update current weather conditions for {Station.ICAO} at {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}",
+                    ex);
             }
         }
-
-        private static string RequestBuilder(string icao)
-            =>
-                $"https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={icao}&hoursBeforeNow=1";
     }
 
+    /// <summary>
+    /// Structure to hold METAR data
+    /// </summary>
     public struct Weather
     {
+        /// <summary>
+        /// Current temperature at the weather station
+        /// </summary>
         public double Temperature { get; }
+
+        /// <summary>
+        /// Current dewpoint at the weather station
+        /// </summary>
         public double Dewpoint { get; }
+
+        /// <summary>
+        /// Current wind speed at the weather station
+        /// </summary>
         public double WindSpeed { get; }
+
+        /// <summary>
+        /// Current wind heading at the weather station
+        /// </summary>
         public int WindHeading { get; }
+
+        /// <summary>
+        /// Current pressure at the weather station
+        /// </summary>
         public double Pressure { get; }
+
+        /// <summary>
+        /// Current visibility at the weather station
+        /// </summary>
         public double Visibility { get; }
+
+        /// <summary>
+        /// Current sky conditions at the weather station
+        /// </summary>
         public string SkyConditions { get; }
 
+        /// <summary>
+        /// COnstructor
+        /// </summary>
+        /// <param name="temperature">Temperature at the weather station</param>
+        /// <param name="dewpoint">Dewpoint at the weather station</param>
+        /// <param name="windspeed">Winds peed at the weather station</param>
+        /// <param name="windheading">Wind heading at the weather station</param>
+        /// <param name="pressure">Pressure at the weather station</param>
+        /// <param name="visibility">Visibility at the weather station</param>
+        /// <param name="skyconditions">Sky conditions at the weather station</param>
         public Weather(double temperature, double dewpoint, double windspeed, int windheading, double pressure,
             double visibility, string skyconditions)
         {
@@ -142,14 +251,29 @@ namespace OpenWeather
         }
     }
 
+    /// <summary>
+    /// Exception for errors in pulling or interpreting METAR from NOAA
+    /// </summary>
     public class WeatherUpdateException : Exception
     {
-        public WeatherUpdateException() {}
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public WeatherUpdateException() { }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="message">Error message</param>
         public WeatherUpdateException(string message)
-            : base(message) {}
+            : base(message) { }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="message">Error message</param>
+        /// <param name="inner">Inner exception</param>
         public WeatherUpdateException(string message, Exception inner)
-            : base(message, inner) {}
+            : base(message, inner) { }
     }
 }
