@@ -1,3 +1,12 @@
+# Author Ryan Cooper, OpenWeather Project
+# Updated: 08.06.16 (dd.mm.yy)
+#
+# METAR and ICAO compliant weather station list.
+# Adapted from Greg Thompson's list https://www.aviationweather.gov/static/adds/metars/stations.txt
+#
+# ICAO, Latitude (aprox), Longitude (aprox), Elevation (meters), Country code, Region code, Name/City
+#
+
 PAKH,56.9333333333333,-154.183333333333,14,US,AK,AKHIOK
 PAUT,54.15,-165.6,25,US,AK,AKUTAN
 PAFM,67.1,-157.85,88,US,AK,AMBLER

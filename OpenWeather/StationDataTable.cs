@@ -1,7 +1,6 @@
 ﻿using System;
 using OpenWeather.Properties;
 using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -42,10 +41,12 @@ namespace OpenWeather
 
             using (var reader = new StringReader(Resources.official_stations))
             {
-                string[] fields;
-                while ((fields = reader.ReadLine()?.Split(',')) != null)
+                string line;
+                while ((line = reader.ReadLine()) != null)
                 {
-                    Debug.Assert(fields != null, "official_stations list has an error");
+                    if (line.Contains("#") || string.IsNullOrEmpty(line)) continue;
+
+                    var fields = line.Split(',');
                     Stations.Rows.Add(fields[0], Convert.ToDouble(fields[1]), Convert.ToDouble(fields[2]),
                         Convert.ToDouble(fields[3]), fields[4], fields[5], fields[6]);
                 }
