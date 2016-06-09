@@ -8,7 +8,7 @@ namespace OpenWeather
     /// <summary>
     /// Singleton to manage a StationDataTable and lookup stations
     /// </summary>
-    public class StationLookup
+    public sealed class StationLookup
     {
         private static Lazy<StationLookup> _lazy =
             new Lazy<StationLookup>(() => new StationLookup());

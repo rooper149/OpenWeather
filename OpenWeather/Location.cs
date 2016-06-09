@@ -60,17 +60,19 @@ namespace OpenWeather
         /// </summary>
         /// <param name="station">METAR compliant weather station</param>
         /// <param name="units">Units of measurement for data retrieved</param>
+        /// <param name="autoUpdate">Whether or not the location object should auto update weather information</param>
         /// <param name="updateNow">Updates the weather data during object creation</param>
-        public LocationWeather(Station station, Units units, bool updateNow = true)
+        public LocationWeather(Station station, Units units, bool autoUpdate, bool updateNow = true)
         {
             Station = station;
             Units = units;
 
-            if(updateNow)
+            if (updateNow)
                 Update();
 
-            updateIntervalTimer = new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
-                TimeSpan.FromSeconds(UPDATE_INTERVAL));
+            if (autoUpdate)
+                updateIntervalTimer = new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
+                    TimeSpan.FromSeconds(UPDATE_INTERVAL));
         }
 
         /// <summary>
@@ -80,9 +82,10 @@ namespace OpenWeather
         /// See https://github.com/rooper149/OpenICAO for information about OpenICAO</param>
         /// <param name="latitude">Latitude of the location requesting METAR data</param>
         /// <param name="longitude">Longitude of the location requesting METAR data</param>
+        /// <param name="autoUpdate">Whether or not the location object should auto update weather information</param>
         /// <param name="units">Units of measurement for data retrieved</param>
         /// <param name="updateNow">Updates the weather data during object creation</param>
-        public LocationWeather(string apiprovider, double latitude, double longitude, Units units, bool updateNow = true)
+        public LocationWeather(string apiprovider, double latitude, double longitude, Units units, bool autoUpdate, bool updateNow = true)
         {
             var icao = new WebClient().DownloadString($"{apiprovider}Search/?lat={latitude}&lngt={longitude}");
             Station = new Station(icao, latitude, longitude);
@@ -91,7 +94,8 @@ namespace OpenWeather
             if(updateNow)
                 Update();
 
-            updateIntervalTimer = new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
+            if (autoUpdate)
+                updateIntervalTimer = new Timer(_timer_Elapsed, null, TimeSpan.FromSeconds(UPDATE_INTERVAL),
                 TimeSpan.FromSeconds(UPDATE_INTERVAL));
         }
 

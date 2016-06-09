@@ -17,7 +17,7 @@ namespace OpenWeather
     /// <summary>
     /// Class to hold data table of all METAR compliant weather stations
     /// </summary>
-    public class StationDataTable
+    public sealed class StationDataTable
     {
         /// <summary>
         /// Data table of stations
