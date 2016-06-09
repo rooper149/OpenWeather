@@ -17,7 +17,7 @@ namespace Example
             //StationLookup.Instance.ZeroActionInitialize();
 
             var locationWeather = new LocationWeather(StationLookup.Instance.Lookup(-90, -180), new Units(TemperatureUnit.DegreeCelsius,
-                PressureUnit.Millibar, SpeedUnit.KilometerPerHour, LengthUnit.Kilometer));
+                PressureUnit.Millibar, SpeedUnit.KilometerPerHour, LengthUnit.Kilometer), false);
 
             Console.WriteLine($"Station: {locationWeather.Station.Name}\n" +
                               $"ICAO: {locationWeather.Station.ICAO}\n" +
