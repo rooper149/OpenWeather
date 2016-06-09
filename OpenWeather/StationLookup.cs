@@ -10,7 +10,7 @@ namespace OpenWeather
     /// </summary>
     public class StationLookup
     {
-        private static readonly Lazy<StationLookup> _lazy =
+        private static Lazy<StationLookup> _lazy =
             new Lazy<StationLookup>(() => new StationLookup());
 
         /// <summary>
@@ -25,6 +25,13 @@ namespace OpenWeather
         /// Instance of the singleton
         /// </summary>
         public static StationLookup Instance => _lazy.Value;
+
+        /// <summary>
+        /// Invokable method to provide the ability to build the StationDataTable for the singleton without having
+        /// to create a variable to hold StationLookup.Instance or building it upon first use of the Lookup() functions.
+        /// On average, increases first lookup by 5 times.
+        /// </summary>
+        public StationLookup ZeroActionInitialize() => Instance;
 
         /// <summary>
         /// Specifies if the StationDataTable should be stored in memory or collected by GC. See 'SetPersistentLookup(bool)'
@@ -75,7 +82,8 @@ namespace OpenWeather
         public void SetPersistentLookup(bool val)
         {
             isPersistent = val;
-            stations = val ? new StationDataTable() : null;
+
+            stations = val && (stations == null) ? new StationDataTable() : null;
 
             if (!val)
                 GC.Collect();
