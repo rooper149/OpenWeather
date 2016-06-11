@@ -12,7 +12,7 @@ namespace OpenWeather
     /// </summary>
     /// <param name="source">Source object</param>
     /// <param name="e">EventArgs</param>
-    public delegate void LocationWeatherUpdated(object source, LocationUpdateEventArgs e);
+    public delegate void LocationWeatherUpdatedEventHandler(object source, LocationUpdateEventArgs e);
 
     /// <summary>
     /// EventArgs for LocationWeatherUpdated event
@@ -43,12 +43,12 @@ namespace OpenWeather
     /// <summary>
     /// Class to handle the retrival of METAR data from a weather station
     /// </summary>
-    public class LocationWeather
+    public class LocationWeather : IDisposable
     {
         /// <summary>
         /// Timer for updating weather data from NOAA
         /// </summary>
-        private readonly Timer updateIntervalTimer;
+        private Timer updateIntervalTimer;
 
         /// <summary>
         /// Default interval that updateIntervalTimer runs at
@@ -105,8 +105,11 @@ namespace OpenWeather
         /// <param name="minutes"></param>
         public void SetUpdateInterval(int minutes)
         {
-            var seconds = minutes * 60;
-            updateIntervalTimer.Change(seconds, seconds);
+            checked
+            {
+                var seconds = minutes*60;
+                updateIntervalTimer.Change(seconds, seconds);
+            }
         }
 
         /// <summary>
@@ -127,7 +130,7 @@ namespace OpenWeather
         /// <summary>
         /// Event to notify when weather data has being retrieved
         /// </summary>
-        public event LocationWeatherUpdated Updated;
+        public event LocationWeatherUpdatedEventHandler Updated;
 
         /// <summary>
         /// Changes the unit preferences for the data
@@ -181,6 +184,7 @@ namespace OpenWeather
                 Updated?.Invoke(this,
                     new LocationUpdateEventArgs(
                         $"Updated current weather conditions for {Station.ICAO} at {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}"));
+                wc.Dispose();
             }
             catch (Exception ex)
             {
@@ -192,6 +196,27 @@ namespace OpenWeather
                     ex);
             }
         }
+
+        #region IDisposable Support
+        private bool disposedValue;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposedValue) return;
+
+            if (disposing)
+                updateIntervalTimer.Dispose();
+            updateIntervalTimer = null;
+            disposedValue = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        } 
+
+        #endregion
     }
 
     /// <summary>
@@ -260,6 +285,7 @@ namespace OpenWeather
     /// <summary>
     /// Exception for errors in pulling or interpreting METAR from NOAA
     /// </summary>
+    [Serializable]
     public class WeatherUpdateException : Exception
     {
         /// <summary>

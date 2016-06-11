@@ -118,7 +118,7 @@ namespace OpenWeather
         /// <param name="icao">ICAO code for the weather station</param>
         /// <param name="hours">Hours of data to collect</param>
         /// <returns>URL too lookup 24 hours of METAR data from NOAA</returns>
-        public static string GenerateLoopupUrl(string icao, int hours = 24)
+        public static string GenerateLookupUrl(string icao, int hours = 24)
         =>
             $"https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={icao}&hoursBeforeNow={hours}";
 }

@@ -44,6 +44,7 @@
     <OutputPath>bin\Windows\</OutputPath>
     <Optimize>true</Optimize>
     <DefineConstants>WINDOWS</DefineConstants>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">

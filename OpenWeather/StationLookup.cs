@@ -31,7 +31,7 @@ namespace OpenWeather
         /// to create a variable to hold StationLookup.Instance or building it upon first use of the Lookup() functions.
         /// On average, increases first lookup by 5 times.
         /// </summary>
-        public StationLookup ZeroActionInitialize() => Instance;
+        public static StationLookup ZeroActionInitialize() => Instance;
 
         /// <summary>
         /// Specifies if the StationDataTable should be stored in memory or collected by GC. See 'SetPersistentLookup(bool)'
@@ -49,7 +49,11 @@ namespace OpenWeather
         /// <param name="icao">Station's ICAO code</param>
         /// <returns>A Station matching the ICAO code</returns>
         public Station Lookup(string icao)
-            => !isPersistent ? new StationDataTable().GetStation(icao) : stations.GetStation(icao);
+        {
+            if (isPersistent) return stations.GetStation(icao);
+            using (var dataTable = new StationDataTable())
+                return dataTable.GetStation(icao);
+        }
 
         /// <summary>
         /// Gets the nearest station to a given coordinate
@@ -65,9 +69,11 @@ namespace OpenWeather
         /// <param name="longitude">Longitude of location</param>
         /// <returns>The Station closest to the provided coorodinate</returns>
         public Station Lookup(double latitude, double longitude)
-            => !isPersistent
-                ? new StationDataTable().GetClosestStation(latitude, longitude)
-                : stations.GetClosestStation(latitude, longitude);
+        {
+            if (isPersistent) return stations.GetClosestStation(latitude, longitude);
+            using (var dataTable = new StationDataTable())
+                return dataTable.GetClosestStation(latitude, longitude);
+        }
 
         /// <summary>
         /// Sets whether the StationDataTable should be persistant in memory or be collected by GC.
@@ -83,10 +89,16 @@ namespace OpenWeather
         {
             isPersistent = val;
 
-            stations = val && (stations == null) ? new StationDataTable() : null;
+            if (val && (stations == null))
+                stations = new StationDataTable();
+            else
+            {
+                stations.Dispose();
+                stations = null;
+            }
 
-            if (!val)
-                GC.Collect();
+            /*if (!val)
+                GC.Collect();*/
         }
     }
 }

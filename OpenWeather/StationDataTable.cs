@@ -17,12 +17,12 @@ namespace OpenWeather
     /// <summary>
     /// Class to hold data table of all METAR compliant weather stations
     /// </summary>
-    public sealed class StationDataTable
+    public sealed class StationDataTable : IDisposable
     {
         /// <summary>
         /// Data table of stations
         /// </summary>
-        private DataTable Stations { get; }
+        private DataTable Stations { get; set; }
 
         /// <summary>
         /// Constructor, builds the Stations data table from official_stations.csv resource
@@ -124,5 +124,23 @@ namespace OpenWeather
 #endif
             return closestStation;
         }
+
+        #region IDisposable Support
+        private bool disposedValue;
+
+        private void Dispose(bool disposing)
+        {
+            if (disposedValue) return;
+
+            if (disposing)
+                Stations.Dispose();
+
+            Stations = null;
+            disposedValue = true;
+        }
+
+        public void Dispose() => Dispose(true);
+
+        #endregion
     }
 }
