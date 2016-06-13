@@ -22,7 +22,7 @@
       <h3>
 <a id="welcome-to-openweather" class="anchor" href="#welcome-to-openweather" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to OpenWeather.</h3>
 
-<p>Open Weather is a simple library designed to take a coordinate (latitude and longitude) and find the closest weather station to that coordinate while also getting the current METAR weather data and parsing it. It has other features like being cross-platform (Windows/Linux/Android), searching by ICAO codes, automatic update intervals, and unit conversions. We hope to be adding more and more features as development continues!</p>
+<p>Open Weather is a simple library designed to take a coordinate (latitude and longitude) and find the closest weather station to that coordinate while also getting the current METAR or TAF weather data and parsing it. It has other features like being cross-platform (Windows/Linux/Android), searching by ICAO codes, automatic update intervals, and unit conversions. We hope to be adding more and more features as development continues!</p>
 
 <h3>
 <a id="pre-compiled-packages" class="anchor" href="#pre-compiled-packages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pre-Compiled Packages</h3>
@@ -41,16 +41,22 @@ Our weather station lookup list is adapted from Greg Thompson's station list whi
 
 <p>It's easy to search for a station and start getting weather data!</p>
 
-<pre><code>private static void Main(string[] args)
+<pre><code> private static void Main(string[] args)
     {
-        var locationWeather = new LocationWeather(StationLookup.Instance.Lookup(-90, -180), new    Units(TemperatureUnit.DegreeCelsius,
-            PressureUnit.Millibar, SpeedUnit.KilometerPerHour, LengthUnit.Kilometer));
+        //Optional, build the StationDataTable without any actions, otherwise it will be built upon first loopkup like below.
+        //On average, increases the first lookup time by 5 times. Obviously it's of no use in this application, but for an
+        //application that runs lookups at a later time, you could build the table at the start and have it ready for later 
+        (assuming you even want persistant lookup).
+        //StationLookup.ZeroActionInitialize();
 
-        Console.WriteLine($"Station: {locationWeather.Station.Name}\n" +
-                          $"ICAO: {locationWeather.Station.ICAO}\n" +
-                          $"Temperature: {locationWeather.Weather.Temperature} {locationWeather.Units.TemperatureUnit}\n" +
-                          $"Pressure: {locationWeather.Weather.Pressure} {locationWeather.Units.PressureUnit}\n" +
-                          $"Wind Speed: {locationWeather.Weather.WindSpeed} {locationWeather.Units.WindSpeedUnit}");
+        var station = MetarStationLookup.Instance.Lookup(-90, -180);
+
+        Console.WriteLine($"Station: {station.GetStationInfo.Name}\n" +
+                          $"ICAO: {station.GetStationInfo.ICAO}\n" +
+                          $"Temperature: {station.Weather.Temperature} {station.Units.TemperatureUnit}\n" +
+                          $"Pressure: {station.Weather.Pressure} {station.Units.PressureUnit}\n" +
+                          $"Wind Speed: {station.Weather.WindSpeed} {station.Units.WindSpeedUnit}");
+
         Console.ReadLine();
     }
 </code></pre>
