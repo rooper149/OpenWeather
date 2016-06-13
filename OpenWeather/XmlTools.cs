@@ -6,7 +6,7 @@ namespace OpenWeather
     /// <summary>
     /// Static set of tools for getting Xml data
     /// </summary>
-    public static class XmlTools
+    internal static class XmlTools
     {
         /// <summary>
         /// Returns the attribute value of an XElement.
@@ -18,7 +18,7 @@ namespace OpenWeather
         public static string GetAttributeValue(string attribute, XDocument doc, params string[] elements)
         {
             var xAttribute = GetNode(doc, elements).Attribute(attribute);
-            return xAttribute != null ? xAttribute.Value : null;
+            return xAttribute?.Value;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace OpenWeather
         public static string GetElementContent(string targetElement, XDocument doc, params string[] elements)
         {
             var content = GetNode(doc, elements).Element(targetElement)?.Value;
-            return content ?? null;
+            return content;
         }
 
         /// <summary>
@@ -45,6 +45,28 @@ namespace OpenWeather
             var node = doc.Root;
             node = elements.Aggregate(node, (current, value) => current.Element(value));
             return node;
+        }
+
+        /// <summary>
+        /// Returns the last nodes from a path of XElements.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="element">Name of element to navigate.</param>
+        /// <param name="attribute">attribute within the element</param>
+        /// <param name="value">value of the attrivute</param>
+        /// <returns>XDocument</returns>
+        public static XDocument TruncateXDocument(XDocument doc, string element, string attribute, string value)
+        {
+            var node = doc.Root;
+
+            var address =
+                from el in node.Elements(element)
+                where (string)el.Attribute(attribute) == value
+                select el;
+
+            var str = address.Aggregate(string.Empty, (current, xElement) => current + xElement.ToString());
+
+            return XDocument.Parse(str);
         }
     }
 }

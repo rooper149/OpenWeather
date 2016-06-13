@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 
 #if !ANDROID
+
 using System.Device.Location;
+
 #else
 
 using Android.Locations;
@@ -17,7 +19,7 @@ namespace OpenWeather
     /// <summary>
     /// Class to hold data table of all METAR compliant weather stations
     /// </summary>
-    public sealed class StationDataTable : IDisposable
+    internal sealed class StationDataTable : IDisposable
     {
         /// <summary>
         /// Data table of stations
@@ -57,14 +59,23 @@ namespace OpenWeather
         /// Gets the station (if any) matching an ICAO code
         /// </summary>
         /// <param name="icao">Station's ICAO code</param>
-        /// <returns>A Station matching the ICAO code</returns>
-        public Station GetStation(string icao)
+        /// <returns>A MetarStation matching the ICAO code</returns>
+        public StationInfo GetStationInfo(string icao)
         {
             var row = Stations.Rows.Cast<DataRow>().ToList().SingleOrDefault(r => (string)r["ICAO"] == icao);
 
-            return new Station((string)row["ICAO"], (double)row["Latitude"], (double)row["Longitude"],
-                (double)row["Elevation"],
-                (string)row["Country"], (string)row["Region"], (string)row["City"]);
+            var info = new StationInfo
+            {
+                ICAO = (string)row["ICAO"],
+                Location = new GeoCoordinate((double)row["Latitude"], (double)row["Longitude"]),
+                Elevation = (double)row["Elevation"],
+                Country = (string)row["Country"],
+                Region = (string)row["Region"],
+                City = (string)row["City"],
+                Name = (string)row["City"]
+            };
+
+            return info;
         }
 
         /// <summary>
@@ -72,8 +83,8 @@ namespace OpenWeather
         /// </summary>
         /// <param name="coordinate">Coorodinate of location</param>
         /// <returns>The Station closest to the provided coorodinate</returns>
-        public Station GetClosestStation(GeoCoordinate coordinate)
-            => GetClosestStation(coordinate.Latitude, coordinate.Longitude);
+        public StationInfo GetClosestStationInfo(GeoCoordinate coordinate)
+            => GetClosestStationInfo(coordinate.Latitude, coordinate.Longitude);
 
         /// <summary>
         /// Gets the nearest station to a given latitude and longitude
@@ -81,23 +92,37 @@ namespace OpenWeather
         /// <param name="latitude">Latitude of location</param>
         /// <param name="longitude">Longitude of location</param>
         /// <returns>The Station closest to the provided coorodinate</returns>
-        public Station GetClosestStation(double latitude, double longitude)
+        public StationInfo GetClosestStationInfo(double latitude, double longitude)
         {
             var rows = Stations.Rows.Cast<DataRow>().ToList();
-            var closestStation = new Station((string)rows[0]["ICAO"], (double)rows[0]["Latitude"],
-                (double)rows[0]["Longitude"], (double)rows[0]["Elevation"],
-                (string)rows[0]["Country"], (string)rows[0]["Region"], (string)rows[0]["City"]);
+            var closestStation = new StationInfo
+            {
+                ICAO = (string)rows[0]["ICAO"],
+                Location = new GeoCoordinate((double)rows[0]["Latitude"], (double)rows[0]["Longitude"]),
+                Elevation = (double)rows[0]["Elevation"],
+                Country = (string)rows[0]["Country"],
+                Region = (string)rows[0]["Region"],
+                City = (string)rows[0]["City"],
+                Name = (string)rows[0]["City"]
+            };
 
 #if !ANDROID
             var location = new GeoCoordinate(latitude, longitude);
 
             foreach (var row in from row in rows.Skip(1)
-                let dest = new GeoCoordinate((double) row["Latitude"], (double) row["Longitude"])
-                where location.GetDistanceTo(dest) < location.GetDistanceTo(closestStation.Location)
-                select row)
-                closestStation = new Station((string) row["ICAO"], (double) row["Latitude"],
-                    (double) row["Longitude"], (double) row["Elevation"],
-                    (string) row["Country"], (string) row["Region"], (string) row["City"]);
+                                let dest = new GeoCoordinate((double)row["Latitude"], (double)row["Longitude"])
+                                where location.GetDistanceTo(dest) < location.GetDistanceTo(closestStation.Location)
+                                select row)
+                closestStation = new StationInfo
+                {
+                    ICAO = (string)row["ICAO"],
+                    Location = new GeoCoordinate((double)row["Latitude"], (double)row["Longitude"]),
+                    Elevation = (double)row["Elevation"],
+                    Country = (string)row["Country"],
+                    Region = (string)row["Region"],
+                    City = (string)row["City"],
+                    Name = (string)row["City"]
+                };
 #else
             var location = new Location("ORGIN")
             {
@@ -118,14 +143,22 @@ namespace OpenWeather
                                 }
                                 where location.DistanceTo(possibleEndPoint) < location.DistanceTo(currentEndPoint)
                                 select row)
-                closestStation = new Station((string)row["ICAO"], (double)row["Latitude"],
-                    (double)row["Longitude"], (double)row["Elevation"],
-                    (string)row["Country"], (string)row["Region"], (string)row["City"]);
+                closestStation = new StationInfo
+            {
+                ICAO = (string) row["ICAO"],
+                Location = new GeoCoordinate((double)row["Latitude"], (double)row["Longitude"]),
+                Elevation = (double) row["Elevation"],
+                Country = (string) row["Country"],
+                Region = (string) row["Region"],
+                City = (string) row["City"],
+                Name = (string)row["City"]
+            };
 #endif
             return closestStation;
         }
 
         #region IDisposable Support
+
         private bool disposedValue;
 
         private void Dispose(bool disposing)
@@ -141,6 +174,6 @@ namespace OpenWeather
 
         public void Dispose() => Dispose(true);
 
-        #endregion
+        #endregion IDisposable Support
     }
 }

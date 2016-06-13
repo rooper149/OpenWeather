@@ -1,6 +1,9 @@
 ﻿using System;
+
 #if !ANDROID
+
 using System.Device.Location;
+
 #endif
 
 namespace OpenWeather
@@ -8,15 +11,15 @@ namespace OpenWeather
     /// <summary>
     /// Singleton to manage a StationDataTable and lookup stations
     /// </summary>
-    public sealed class StationLookup
+    public sealed class MetarStationLookup
     {
-        private static Lazy<StationLookup> _lazy =
-            new Lazy<StationLookup>(() => new StationLookup());
+        private static readonly Lazy<MetarStationLookup> _lazy =
+            new Lazy<MetarStationLookup>(() => new MetarStationLookup());
 
         /// <summary>
         /// private constructor
         /// </summary>
-        private StationLookup()
+        private MetarStationLookup()
         {
             stations = new StationDataTable();
         }
@@ -24,14 +27,14 @@ namespace OpenWeather
         /// <summary>
         /// Instance of the singleton
         /// </summary>
-        public static StationLookup Instance => _lazy.Value;
+        public static MetarStationLookup Instance => _lazy.Value;
 
         /// <summary>
         /// Invokable method to provide the ability to build the StationDataTable for the singleton without having
         /// to create a variable to hold StationLookup.Instance or building it upon first use of the Lookup() functions.
         /// On average, increases first lookup by 5 times.
         /// </summary>
-        public static StationLookup ZeroActionInitialize() => Instance;
+        public static MetarStationLookup ZeroActionInitialize() => Instance;
 
         /// <summary>
         /// Specifies if the StationDataTable should be stored in memory or collected by GC. See 'SetPersistentLookup(bool)'
@@ -48,11 +51,11 @@ namespace OpenWeather
         /// </summary>
         /// <param name="icao">Station's ICAO code</param>
         /// <returns>A Station matching the ICAO code</returns>
-        public Station Lookup(string icao)
+        public MetarStation Lookup(string icao)
         {
-            if (isPersistent) return stations.GetStation(icao);
+            if (isPersistent) return new MetarStation(stations.GetStationInfo(icao), true);
             using (var dataTable = new StationDataTable())
-                return dataTable.GetStation(icao);
+                return new MetarStation(dataTable.GetStationInfo(icao), true);
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace OpenWeather
         /// </summary>
         /// <param name="coordinate">Coorodinate of location</param>
         /// <returns>The Station closest to the provided coorodinate</returns>
-        public Station Lookup(GeoCoordinate coordinate) => Lookup(coordinate.Latitude, coordinate.Longitude);
+        public MetarStation Lookup(GeoCoordinate coordinate) => Lookup(coordinate.Latitude, coordinate.Longitude);
 
         /// <summary>
         /// Gets the nearest station to a given latitude and longitude
@@ -68,11 +71,11 @@ namespace OpenWeather
         /// <param name="latitude">Latitude of location</param>
         /// <param name="longitude">Longitude of location</param>
         /// <returns>The Station closest to the provided coorodinate</returns>
-        public Station Lookup(double latitude, double longitude)
+        public MetarStation Lookup(double latitude, double longitude)
         {
-            if (isPersistent) return stations.GetClosestStation(latitude, longitude);
+            if (isPersistent) return new MetarStation(stations.GetClosestStationInfo(latitude, longitude), true);
             using (var dataTable = new StationDataTable())
-                return dataTable.GetClosestStation(latitude, longitude);
+                return new MetarStation(dataTable.GetClosestStationInfo(latitude, longitude), true);
         }
 
         /// <summary>

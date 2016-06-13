@@ -61,16 +61,19 @@ namespace OpenWeather.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PAKH,56.9333333333333,-154.183333333333,14,US,AK,AKHIOK
+        ///   Looks up a localized string similar to # Author Ryan Cooper, OpenWeather Project
+        ///# Updated: 08.06.16 (dd.mm.yy)
+        ///#
+        ///# METAR and ICAO compliant weather station list.
+        ///# Adapted from Greg Thompson&apos;s list https://www.aviationweather.gov/static/adds/metars/stations.txt
+        ///#
+        ///# ICAO, Latitude (aprox), Longitude (aprox), Elevation (meters), Country code, Region code, Name/City
+        ///#
+        ///
+        ///PAKH,56.9333333333333,-154.183333333333,14,US,AK,AKHIOK
         ///PAUT,54.15,-165.6,25,US,AK,AKUTAN
         ///PAFM,67.1,-157.85,88,US,AK,AMBLER
-        ///PAKP,68.1333333333333,-151.733333333333,642,US,AK,ANAKTUVUK PASS
-        ///PANC,61.1666666666667,-150.016666666667,38,US,AK,ANCHORAGE INTL
-        ///PAFC,61.1666666666667,-150.033333333333,48,US,AK,ANCHORAGE/WFO
-        ///PAHG,60.7333333333333,-151.35,74,US,AK,ANCHORAG/NIKISKI
-        ///PALH,61.1833333333333,-149.966666666667,22,US,AK,ANCHORAGE/LAKE H
-        ///PZAN,61.1666666666667,-149.983333333333,22,US,AK,ANCHORAGE/ARTCC
-        /// [rest of string was truncated]&quot;;.
+        ///PAKP,68.1333333333333,-151.733333333333,642,U [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string official_stations {
             get {
