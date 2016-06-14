@@ -50,32 +50,38 @@ namespace OpenWeather
         /// Gets the station (if any) matching an ICAO code
         /// </summary>
         /// <param name="icao">Station's ICAO code</param>
+        /// <param name="updateOnCreation">Updates the weather information from NOAA during the objects initialization</param>
+        /// <param name="autoUpdate">Sets whether the Station should auto update on a timer</param>
         /// <returns>A Station matching the ICAO code</returns>
-        public MetarStation Lookup(string icao)
+        public MetarStation Lookup(string icao, bool updateOnCreation = true, bool autoUpdate = true)
         {
-            if (isPersistent) return new MetarStation(stations.GetStationInfo(icao), true);
+            if (isPersistent) return new MetarStation(stations.GetStationInfo(icao), autoUpdate, updateOnCreation);
             using (var dataTable = new StationDataTable())
-                return new MetarStation(dataTable.GetStationInfo(icao), true);
+                return new MetarStation(dataTable.GetStationInfo(icao), autoUpdate, updateOnCreation);
         }
 
         /// <summary>
         /// Gets the nearest station to a given coordinate
         /// </summary>
         /// <param name="coordinate">Coorodinate of location</param>
+        /// <param name="updateOnCreation">Updates the weather information from NOAA during the objects initialization</param>
+        /// <param name="autoUpdate">Sets whether the Station should auto update on a timer</param>
         /// <returns>The Station closest to the provided coorodinate</returns>
-        public MetarStation Lookup(GeoCoordinate coordinate) => Lookup(coordinate.Latitude, coordinate.Longitude);
+        public MetarStation Lookup(GeoCoordinate coordinate, bool updateOnCreation = true, bool autoUpdate = true) => Lookup(coordinate.Latitude, coordinate.Longitude, autoUpdate, updateOnCreation);
 
         /// <summary>
         /// Gets the nearest station to a given latitude and longitude
         /// </summary>
         /// <param name="latitude">Latitude of location</param>
         /// <param name="longitude">Longitude of location</param>
+        /// <param name="updateOnCreation">Updates the weather information from NOAA during the objects initialization</param>
+        /// <param name="autoUpdate">Sets whether the Station should auto update on a timer</param>
         /// <returns>The Station closest to the provided coorodinate</returns>
-        public MetarStation Lookup(double latitude, double longitude)
+        public MetarStation Lookup(double latitude, double longitude, bool updateOnCreation = true, bool autoUpdate = true)
         {
-            if (isPersistent) return new MetarStation(stations.GetClosestStationInfo(latitude, longitude), true);
+            if (isPersistent) return new MetarStation(stations.GetClosestStationInfo(latitude, longitude), autoUpdate, updateOnCreation);
             using (var dataTable = new StationDataTable())
-                return new MetarStation(dataTable.GetClosestStationInfo(latitude, longitude), true);
+                return new MetarStation(dataTable.GetClosestStationInfo(latitude, longitude), autoUpdate, updateOnCreation);
         }
 
         /// <summary>
