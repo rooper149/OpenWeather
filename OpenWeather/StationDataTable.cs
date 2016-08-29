@@ -62,7 +62,7 @@ namespace OpenWeather
         /// <returns>A MetarStation matching the ICAO code</returns>
         public StationInfo GetStationInfo(string icao)
         {
-            var row = Stations.Rows.Cast<DataRow>().ToList().SingleOrDefault(r => (string)r["ICAO"] == icao);
+            var row = Stations.Rows.Cast<DataRow>().ToList().SingleOrDefault(r => (string)r["ICAO"] == icao.ToUpper());
 
             var info = new StationInfo
             {

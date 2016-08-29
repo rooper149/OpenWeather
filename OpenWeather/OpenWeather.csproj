@@ -58,8 +58,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnitsNet, Version=3.36.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\UnitsNet.3.36.0\lib\net35\UnitsNet.dll</HintPath>
+    <Reference Include="UnitsNet, Version=3.40.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UnitsNet.3.40.0\lib\net35\UnitsNet.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

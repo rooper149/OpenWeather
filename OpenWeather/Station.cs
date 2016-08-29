@@ -117,8 +117,8 @@ namespace OpenWeather
         {
             checked
             {
-                var seconds = minutes * 60;
-                updateIntervalTimer.Change(seconds, seconds);
+                var seconds = minutes * 60000;
+                updateIntervalTimer.Change(0, seconds);
             }
         }
 

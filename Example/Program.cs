@@ -13,14 +13,19 @@ namespace Example
             //StationLookup.ZeroActionInitialize();
 
             var station = MetarStationLookup.Instance.Lookup(-90, -180);
-
-            Console.WriteLine($"Station: {station.GetStationInfo.Name}\n" +
-                              $"ICAO: {station.GetStationInfo.ICAO}\n" +
-                              $"Temperature: {station.Weather.Temperature} {station.Units.TemperatureUnit}\n" +
-                              $"Pressure: {station.Weather.Pressure} {station.Units.PressureUnit}\n" +
-                              $"Wind Speed: {station.Weather.WindSpeed} {station.Units.WindSpeedUnit}");
-
+            station.Updated += Station_Updated;
+            station.Update();
             Console.ReadLine();
+        }
+
+        private static void Station_Updated(object source, LocationUpdateEventArgs e)
+        {
+            var station = source as MetarStation;
+            Console.WriteLine($"Station: {station.GetStationInfo.Name}\n" +
+                             $"ICAO: {station.GetStationInfo.ICAO}\n" +
+                             $"Temperature: {station.Weather.Temperature} {station.Units.TemperatureUnit}\n" +
+                             $"Pressure: {station.Weather.Pressure} {station.Units.PressureUnit}\n" +
+                             $"Wind Speed: {station.Weather.WindSpeed} {station.Units.WindSpeedUnit}");
         }
     }
 }
