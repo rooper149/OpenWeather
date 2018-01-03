@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenWeather.Core.Models
+namespace OpenWeather.Models
 {
     public enum AviationFlags
     {

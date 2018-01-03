@@ -1,11 +1,11 @@
-﻿using OpenWeather.Core.Models;
+﻿using OpenWeather.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace OpenWeather.Core
+namespace OpenWeather
 {
     internal class StationFileParser
     {
@@ -18,38 +18,42 @@ namespace OpenWeather.Core
 
         internal async Task<IEnumerable<Station>> GetStationsAsync()
         {
-            // check if the file exists
-            if (await Task.FromResult(File.Exists("Stations.txt")) == false)
-            {
-                // if the file doesn't exist, download it.
-                using (HttpClient client = new HttpClient())
-                {
-                    using (HttpResponseMessage response = await client.GetAsync(_uri))
-                    {
-                        if (response.IsSuccessStatusCode)
-                        {
-                            FileInfo fileIo = new FileInfo("Stations.txt");
-                            using (FileStream fs = new FileStream("Stations.txt", FileMode.Create, FileAccess.Write))
-                            {
-                                using (StreamWriter writer = new StreamWriter(fs))
-                                {
-                                    using (StreamReader reader = new StreamReader(await response.Content.ReadAsStreamAsync()))
-                                    {
-                                        await writer.WriteAsync(await reader.ReadToEndAsync());
-                                    }
-                                }
-                            }
+            string stationsFileContent = null;
 
-                        }
+            //// check if the file exists
+            //if (await Task.FromResult(File.Exists("Stations.txt")) == false)
+            //{
+            //    // if the file doesn't exist, download it.
+            using (HttpClient client = new HttpClient())
+            {
+                using (HttpResponseMessage response = await client.GetAsync(_uri))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        stationsFileContent = await response.Content.ReadAsStringAsync();
+
+                        //FileInfo fileIo = new FileInfo("Stations.txt");
+                        //using (FileStream fs = new FileStream("Stations.txt", FileMode.Create, FileAccess.Write))
+                        //{
+                        //    using (StreamWriter writer = new StreamWriter(fs))
+                        //    {
+                        //        using (StreamReader reader = new StreamReader(await response.Content.ReadAsStreamAsync()))
+                        //        {
+                        //            await writer.WriteAsync(await reader.ReadToEndAsync());
+                        //        }
+                        //    }
+                        //}
+
                     }
                 }
             }
+            //}
 
             List<Station> stations = new List<Station>();
             // we now have the file. Parse it.
-            using (FileStream fs = new FileStream("Stations.txt", FileMode.Open, FileAccess.Read))
-            {
-                using (StreamReader reader = new StreamReader(fs))
+            //using (FileStream fs = new FileStream("Stations.txt", FileMode.Open, FileAccess.Read))
+            //{
+                using (StringReader reader = new StringReader(stationsFileContent))
                 {
                     while (reader.Peek() != -1)
                     {
@@ -110,7 +114,7 @@ namespace OpenWeather.Core
                         stations.Add(station);
                     }
                 }
-            }
+            //}
 
             return stations;
         }

@@ -1,5 +1,4 @@
 ﻿using OpenWeather;
-using OpenWeather.Core;
 using System;
 using System.Linq;
 
@@ -20,14 +19,14 @@ namespace Example
 
             NoaaApi noaaApiBase = new NoaaApi("aJchcTLIvuFMNWvzKUgQHRyzMgsedRmX");
             var stations = noaaApiBase.GetStationsAsync().GetAwaiter().GetResult();
-            var station = stations.SingleOrDefault(x => x.Name.ToLower().StartsWith("elkhart") & x.StateOrProvince.ToLower() == "in");
-            var currentObservations = noaaApiBase.GetCurrentObservationsAsync(station).GetAwaiter().GetResult();
-            
+            var station = stations.SingleOrDefault(x => x.Name.ToLower().StartsWith("goshen") & x.StateOrProvince.ToLower() == "in");
+            var currentObservations = noaaApiBase.GetCurrentObservationsByStationAsync(station).GetAwaiter().GetResult();
+
             Console.WriteLine($"Station: {station.Name}\n" +
                              $"ICAO: {station.ICAO}\n" +
-                             $"Temperature: {currentObservations.Temperature}\n" +
-                             $"Pressure: {currentObservations.Pressure} \n" +
-                             $"Wind Speed: {currentObservations.WindSustained}");
+                             $"Temperature: {currentObservations.Temperature_F}\n" +
+                             $"Pressure: {currentObservations.Pressure_In} \n" +
+                             $"Wind Speed: {currentObservations.Wind_MPH}");
 
             Console.ReadLine();
         }

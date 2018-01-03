@@ -6,7 +6,7 @@ using System.ServiceModel.Channels;
 using System.Xml;
 using System.IO;
 
-namespace OpenWeather.Core.Php
+namespace OpenWeather.Php
 {
     public class CustomTextMessageEncoder : MessageEncoder
     {

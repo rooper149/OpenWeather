@@ -6,7 +6,7 @@ using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.Xml;
 
-namespace OpenWeather.Core.Php
+namespace OpenWeather.Php
 {
     public class CustomTextMessageBindingElement : MessageEncodingBindingElement//, IWsdlExportExtension 
     { 

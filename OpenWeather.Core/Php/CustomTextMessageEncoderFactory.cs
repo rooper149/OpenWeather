@@ -1,6 +1,6 @@
 ﻿using System.ServiceModel.Channels;
 
-namespace OpenWeather.Core.Php
+namespace OpenWeather.Php
 {
     public class CustomTextMessageEncoderFactory : MessageEncoderFactory
     {
