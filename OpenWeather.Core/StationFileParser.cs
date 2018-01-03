@@ -18,12 +18,13 @@ namespace OpenWeather.Core
 
         internal async Task<IEnumerable<Station>> GetStationsAsync()
         {
-
+            // check if the file exists
             if (await Task.FromResult(File.Exists("Stations.txt")) == false)
             {
+                // if the file doesn't exist, download it.
                 using (HttpClient client = new HttpClient())
                 {
-                    using (HttpResponseMessage response = await client.GetAsync("https://www.aviationweather.gov/static/adds/metars/stations.txt"))
+                    using (HttpResponseMessage response = await client.GetAsync(_uri))
                     {
                         if (response.IsSuccessStatusCode)
                         {
@@ -45,7 +46,7 @@ namespace OpenWeather.Core
             }
 
             List<Station> stations = new List<Station>();
-
+            // we now have the file. Parse it.
             using (FileStream fs = new FileStream("Stations.txt", FileMode.Open, FileAccess.Read))
             {
                 using (StreamReader reader = new StreamReader(fs))
@@ -92,7 +93,7 @@ namespace OpenWeather.Core
                         longitudeValue = longitudeValue.Replace(" ", ".");
 
                         double.TryParse(latitudeValue.Substring(0, latitudeValue.Length - 1), out latitude);
-                        if (latitudeValue.EndsWith("N")) latitude *= -1;
+                        if (latitudeValue.EndsWith("S")) latitude *= -1;
                         station.Latitude = latitude;
 
                         double.TryParse(longitudeValue.Substring(0, longitudeValue.Length - 1), out longitude);
