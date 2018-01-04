@@ -26,7 +26,7 @@ namespace OpenWeather.Example.Uwp
             IEnumerable<Station> stations = null;
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Station>));
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-            
+
             if (await storageFolder.TryGetItemAsync("Stations.dat") != null)
             {
                 stations = (List<Station>)xmlSerializer.Deserialize(await storageFolder.OpenStreamForReadAsync("Stations.dat"));
@@ -38,7 +38,11 @@ namespace OpenWeather.Example.Uwp
                 xmlSerializer.Serialize(await storageFolder.OpenStreamForWriteAsync("Stations.dat", CreationCollisionOption.ReplaceExisting), stations);
             }
 
-            cvs.Source = stations.OrderBy(x => x.Name).OrderBy(x => x.Name).GroupBy(x => x.StateOrProvince);
+
+            cvs.Source = stations
+                .OrderBy(x => x.CountryCode)
+                .ThenBy(x => x.Name)
+                .GroupBy(x => Bia.Countries.Iso3166.Countries.GetCountryByAlpha2(x.CountryCode));
         }
     }
 }
