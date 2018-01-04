@@ -33,7 +33,6 @@ namespace OpenWeather
             return await ParseStationsAsync(stationsFileContent);
         }
 
-
         private async Task<IEnumerable<Station>> ParseStationsAsync(string stationsFileContent)
         {
             List<Station> stations = new List<Station>();

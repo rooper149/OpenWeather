@@ -22,23 +22,23 @@ namespace OpenWeather.Example.Uwp
 
         private async void UserControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+
             IEnumerable<Station> stations = null;
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Station>));
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-            StorageFile storageFile = await storageFolder.CreateFileAsync("Stations.dat", CreationCollisionOption.OpenIfExists);
-
-            if (storageFile != null)
+            
+            if (await storageFolder.TryGetItemAsync("Stations.dat") != null)
             {
-                stations = (List<Station>)xmlSerializer.Deserialize(await storageFile.OpenStreamForReadAsync());
+                stations = (List<Station>)xmlSerializer.Deserialize(await storageFolder.OpenStreamForReadAsync("Stations.dat"));
             }
             else
             {
                 NoaaApi api = new NoaaApi(null);
                 stations = await api.GetStationsAsync();
-                xmlSerializer.Serialize(await storageFile.OpenStreamForWriteAsync(), stations);
+                xmlSerializer.Serialize(await storageFolder.OpenStreamForWriteAsync("Stations.dat", CreationCollisionOption.ReplaceExisting), stations);
             }
 
-            cvs.Source = stations.OrderBy(x => x.Name).GroupBy(x => x.Name.Substring(0, 1));
+            cvs.Source = stations.OrderBy(x => x.Name).OrderBy(x => x.Name).GroupBy(x => x.StateOrProvince);
         }
     }
 }
