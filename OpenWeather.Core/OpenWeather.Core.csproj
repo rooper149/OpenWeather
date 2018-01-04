@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>OpenWeather</RootNamespace>
+    <PackageProjectUrl>https://github.com/RyanThiele/OpenWeather</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/RyanThiele/OpenWeather</RepositoryUrl>
+    <RepositoryType>Utility</RepositoryType>
+    <PackageTags>weather, noaa</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
