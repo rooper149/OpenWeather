@@ -67,6 +67,25 @@ namespace OpenWeather.Noaa
             Liquid
         }
 
+        private enum WindSpeedTypes
+        {
+            Gust,
+            Sustained,
+            Incremental34,
+            Incremental50,
+            Incremental64,
+            Cumulative34,
+            Cumulative50,
+            Cumulative64
+        }
+
+        private enum HumidityTypes
+        {
+            Relative,
+            MaximumRelative,
+            MinimumRelative
+        }
+
 
         List<TimeLayout> timeLayouts = new List<TimeLayout>();
         List<Forecast> forecasts = new List<Forecast>();
@@ -91,40 +110,24 @@ namespace OpenWeather.Noaa
             Models.Noaa.Temperature dewpointTemperature = GetTemperature(parametersElement, TemperatureTypes.Dewpoint);
             Models.Noaa.Temperature hourlyTemperature = GetTemperature(parametersElement, TemperatureTypes.Hourly);
 
-            Models.Noaa.Precipitation liquidPrecipitation = GetPrecipitation(parametersElement,  PrecipitationTypes.Liquid);
-            Models.Noaa.Precipitation icePrecipitation = GetPrecipitation(parametersElement,  PrecipitationTypes.Ice);
-            Models.Noaa.Precipitation snowPrecipitation = GetPrecipitation(parametersElement,  PrecipitationTypes.Snow);
+            Models.Noaa.Precipitation liquidPrecipitation = GetPrecipitation(parametersElement, PrecipitationTypes.Liquid);
+            Models.Noaa.Precipitation icePrecipitation = GetPrecipitation(parametersElement, PrecipitationTypes.Ice);
+            Models.Noaa.Precipitation snowPrecipitation = GetPrecipitation(parametersElement, PrecipitationTypes.Snow);
+
+            Models.Noaa.WindSpeed gustWindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Gust);
+            Models.Noaa.WindSpeed sustainedWindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Sustained);
+            Models.Noaa.WindSpeed incremental34WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Incremental34);
+            Models.Noaa.WindSpeed incremental50WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Incremental50);
+            Models.Noaa.WindSpeed incremental64WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Incremental64);
+            Models.Noaa.WindSpeed cumulative34WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Cumulative34);
+            Models.Noaa.WindSpeed cumulative50WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Cumulative50);
+            Models.Noaa.WindSpeed cumulative64WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Cumulative64);
+            
+            Models.Noaa.Humidity releativeHumidity = GetHumidity(parametersElement, HumidityTypes.Relative);
+            Models.Noaa.Humidity maxReleativeHumidity = GetHumidity(parametersElement, HumidityTypes.MaximumRelative);
+            Models.Noaa.Humidity minRleativeHumidity = GetHumidity(parametersElement, HumidityTypes.MinimumRelative);
 
 
-
-
-            //// temperature
-            //XElement maxTemperatureElement = parametersElement.Elements("temperature").Where(x => x.Attribute("type").Value == "maximum").SingleOrDefault();
-            //XElement minTemperatureElement = parametersElement.Elements("temperature").Where(x => x.Attribute("type").Value == "maximum").SingleOrDefault();
-            //XElement hourlyTemperatureElement = parametersElement.Elements("temperature").Where(x => x.Attribute("type").Value == "hourly").SingleOrDefault();
-            //XElement dewpointTemperatureElement = parametersElement.Elements("temperature").Where(x => x.Attribute("type").Value == "dewpoint").SingleOrDefault();
-            //XElement apparentTemperatureElement = parametersElement.Elements("temperature").Where(x => x.Attribute("type").Value == "apparent").SingleOrDefault();
-
-            //// precipitation
-            //XElement liquidPrecipitationElement = parametersElement.Elements("precipitation").Where(x => x.Attribute("type").Value == "liquid").SingleOrDefault();
-            //XElement icePrecipitationElement = parametersElement.Elements("precipitation").Where(x => x.Attribute("type").Value == "ice").SingleOrDefault();
-            //XElement snowPrecipitationElement = parametersElement.Elements("precipitation").Where(x => x.Attribute("type").Value == "snow").SingleOrDefault();
-            //XElement probably12HourPrecipitationElement = parametersElement.Elements("probability-of-precipitation").Where(x => x.Attribute("type").Value == "12 hour").SingleOrDefault();
-
-
-            //// wind
-            //XElement windSpeedSustainedKnotsElement = parametersElement.Elements("wind-speed").Where(x => x.Attribute("type").Value == "sustained").SingleOrDefault();
-            //XElement windSpeedDirectionElement = parametersElement.Elements("direction").Where(x => x.Attribute("type").Value == "wind").SingleOrDefault();
-
-            //// cloud
-            //XElement cloudCoverElement = parametersElement.Elements("cloud-amount").Where(x => x.Attribute("type").Value == "total").SingleOrDefault();
-
-            //// fire
-            //XElement fireWeatherfromWindAndHumidityElement = parametersElement.Elements("fire-weather").Where(x => x.Attribute("type").Value == "risk from wind and relative humidity").SingleOrDefault();
-            //XElement fireWeatherfromDryThunderstormsElement = parametersElement.Elements("fire-weather").Where(x => x.Attribute("type").Value == "risk from dry thunderstorms").SingleOrDefault();
-
-            //// hazards
-            //XElement connectiveHazordsElement = parametersElement.Elements("convective-hazard").Where(x => x.Attribute("type").Value == "risk from dry thunderstorms").SingleOrDefault();
 
 
             return null;
@@ -177,15 +180,15 @@ namespace OpenWeather.Noaa
             return temperature;
         }
 
-        private Models.Noaa.Precipitation GetPrecipitation(XElement parametersElement, PrecipitationTypes precipitationTypes)
+        private Models.Noaa.Precipitation GetPrecipitation(XElement parametersElement, PrecipitationTypes precipitationType)
         {
             if (parametersElement == null) return null;
             string precipitationTypeValue;
 
-            switch (precipitationTypes)
+            switch (precipitationType)
             {
                 default:
-                    precipitationTypeValue = precipitationTypes.ToString().ToLower();
+                    precipitationTypeValue = precipitationType.ToString().ToLower();
                     break;
             }
 
@@ -217,6 +220,95 @@ namespace OpenWeather.Noaa
 
             return precipitation;
         }
+
+        private Models.Noaa.WindSpeed GetWindSpeed(XElement parametersElement, WindSpeedTypes windSpeedType)
+        {
+            if (parametersElement == null) return null;
+            string windSpeedTypeValue;
+
+            switch (windSpeedType)
+            {
+                default:
+                    windSpeedTypeValue = windSpeedType.ToString().ToLower();
+                    break;
+            }
+
+            XElement windSpeedElement = parametersElement.Elements("wind-speed").Where(x => x.Attribute("type").Value == windSpeedTypeValue).SingleOrDefault();
+            if (windSpeedElement == null) return null;
+
+            TimeLayout timeLayout = timeLayouts.SingleOrDefault(x => x.key == windSpeedElement.Attribute("time-layout").Value);
+
+            IEnumerable<XElement> valueElements = windSpeedElement.Elements("value");
+            if (valueElements == null || valueElements.Count() == 0) return null;
+
+            Models.Noaa.WindSpeed windSpeed = new Models.Noaa.WindSpeed()
+            {
+                Title = windSpeedElement.Element("name").Value,
+                Unit = (Models.Noaa.WindSpeedUnits)Enum.Parse(typeof(Models.Noaa.WindSpeedUnits), windSpeedElement.Attribute("units").Value, true),
+                Values = new List<Models.Noaa.WindSpeedValue>()
+            };
+
+            List<XElement> valueElementsList = valueElements.ToList();
+            for (int i = 0; i < valueElementsList.Count; i++)
+            {
+                windSpeed.Values.Add(new Models.Noaa.WindSpeedValue()
+                {
+                    StartDateTime = timeLayout.times[i].startDateTime,
+                    EndDateTime = timeLayout.times[i].endDateTime,
+                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                });
+            }
+
+            return windSpeed;
+        }
+
+        private Models.Noaa.Humidity GetHumidity(XElement parametersElement, HumidityTypes humidityType)
+        {
+            if (parametersElement == null) return null;
+            string humidityTypeTypeValue;
+
+            switch (humidityType)
+            {
+                case HumidityTypes.MaximumRelative:
+                    humidityTypeTypeValue = "maximum relative";
+                    break;
+                case HumidityTypes.MinimumRelative:
+                    humidityTypeTypeValue = "minimum relative";
+                    break;
+                default:
+                    humidityTypeTypeValue = humidityType.ToString().ToLower();
+                    break;
+            }
+
+            XElement humidityElement = parametersElement.Elements("humidity").Where(x => x.Attribute("type").Value == humidityTypeTypeValue).SingleOrDefault();
+            if (humidityElement == null) return null;
+
+            TimeLayout timeLayout = timeLayouts.SingleOrDefault(x => x.key == humidityElement.Attribute("time-layout").Value);
+
+            IEnumerable<XElement> valueElements = humidityElement.Elements("value");
+            if (valueElements == null || valueElements.Count() == 0) return null;
+
+            Models.Noaa.Humidity humidity = new Models.Noaa.Humidity()
+            {
+                Title = humidityElement.Element("name").Value,
+                Unit = (Models.Noaa.HumidityUnits)Enum.Parse(typeof(Models.Noaa.HumidityUnits), humidityElement.Attribute("units").Value, true),
+                Values = new List<Models.Noaa.HumidityValue>()
+            };
+
+            List<XElement> valueElementsList = valueElements.ToList();
+            for (int i = 0; i < valueElementsList.Count; i++)
+            {
+                humidity.Values.Add(new Models.Noaa.HumidityValue()
+                {
+                    StartDateTime = timeLayout.times[i].startDateTime,
+                    EndDateTime = timeLayout.times[i].endDateTime,
+                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                });
+            }
+
+            return humidity;
+        }
+
 
 
         #endregion
