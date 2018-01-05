@@ -86,6 +86,13 @@ namespace OpenWeather.Noaa
             MinimumRelative
         }
 
+        private enum ConvectiveHazardTypes
+        {
+            Tornadoes,
+            Hail,
+            DamagingThunderstormWinds,
+        }
+
 
         List<TimeLayout> timeLayouts = new List<TimeLayout>();
         List<Forecast> forecasts = new List<Forecast>();
@@ -102,6 +109,8 @@ namespace OpenWeather.Noaa
                 timeLayouts.Add(new TimeLayout(item));
             }
 
+            // TODO: Rewrite the get methods to not use enums, but to use strings.
+            // TODO: Add cevective-hazord=>outlook from xml.
             // Parameters (forcasts)
             XElement parametersElement = dataElement.Element("parameters");
             Models.Noaa.Temperature maxTemperature = GetTemperature(parametersElement, TemperatureTypes.Maximum);
@@ -122,12 +131,19 @@ namespace OpenWeather.Noaa
             Models.Noaa.WindSpeed cumulative34WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Cumulative34);
             Models.Noaa.WindSpeed cumulative50WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Cumulative50);
             Models.Noaa.WindSpeed cumulative64WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Cumulative64);
-            
+
             Models.Noaa.Humidity releativeHumidity = GetHumidity(parametersElement, HumidityTypes.Relative);
             Models.Noaa.Humidity maxReleativeHumidity = GetHumidity(parametersElement, HumidityTypes.MaximumRelative);
             Models.Noaa.Humidity minRleativeHumidity = GetHumidity(parametersElement, HumidityTypes.MinimumRelative);
 
-
+            Models.Noaa.ConvectiveHazard tornadoesConvectiveHazard = GetConvectiveHazard(parametersElement, "tornadoes");
+            Models.Noaa.ConvectiveHazard hailConvectiveHazard = GetConvectiveHazard(parametersElement, "hail");
+            Models.Noaa.ConvectiveHazard damagingThunderstormWindsConvectiveHazard = GetConvectiveHazard(parametersElement, "damaging thunderstorm winds");
+            Models.Noaa.ConvectiveHazard extremeTornadoesConvectiveHazard = GetConvectiveHazard(parametersElement, "extreme tornadoes");
+            Models.Noaa.ConvectiveHazard extremeHailConvectiveHazard = GetConvectiveHazard(parametersElement, "extreme hail");
+            Models.Noaa.ConvectiveHazard extremeThunderstormWindsConvectiveHazard = GetConvectiveHazard(parametersElement, "extreme thunderstorm winds");
+            Models.Noaa.ConvectiveHazard severeThunderstormsConvectiveHazard = GetConvectiveHazard(parametersElement, "severe thunderstorms");
+            Models.Noaa.ConvectiveHazard extremeSevereThunderstormsConvectiveHazard = GetConvectiveHazard(parametersElement, "extreme severe thunderstorms");
 
 
             return null;
@@ -309,6 +325,42 @@ namespace OpenWeather.Noaa
             return humidity;
         }
 
+        private Models.Noaa.ConvectiveHazard GetConvectiveHazard(XElement parametersElement, string convectionHazardType)
+        {
+            if (parametersElement == null) return null;
+            
+            IEnumerable<XElement> convectiveHazardElement = convectiveHazardElement = parametersElement.Elements("convective-hazard").Select(x => x.Element("severe-component"));
+            if (convectiveHazardElement == null) return null;
+            
+            XElement severeComponentElement = convectiveHazardElement.Where(x => x != null && x.Attribute("type").Value == convectionHazardType).SingleOrDefault();
+            if (severeComponentElement == null) return null;
+
+            TimeLayout timeLayout = timeLayouts.SingleOrDefault(x => x.key == severeComponentElement.Attribute("time-layout").Value);
+
+            IEnumerable<XElement> valueElements = severeComponentElement.Elements("value");
+            if (valueElements == null || valueElements.Count() == 0) return null;
+
+            Models.Noaa.ConvectiveHazard convectiveHazard = new Models.Noaa.ConvectiveHazard()
+            {
+                Title = severeComponentElement.Element("name").Value,
+                Unit = (Models.Noaa.ConvectiveHazardUnits)Enum.Parse(typeof(Models.Noaa.ConvectiveHazardUnits), severeComponentElement.Attribute("units").Value, true),
+                Values = new List<Models.Noaa.ConvectiveHazardValue>()
+            };
+
+            List<XElement> valueElementsList = valueElements.ToList();
+            for (int i = 0; i < valueElementsList.Count; i++)
+            {
+                convectiveHazard.Values.Add(new Models.Noaa.ConvectiveHazardValue()
+                {
+                    StartDateTime = timeLayout.times[i].startDateTime,
+                    EndDateTime = timeLayout.times[i].endDateTime,
+                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                });
+            }
+
+            return convectiveHazard;
+
+        }
 
 
         #endregion
