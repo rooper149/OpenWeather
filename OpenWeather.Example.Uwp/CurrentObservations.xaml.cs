@@ -34,7 +34,7 @@ namespace OpenWeather.Example.Uwp
 
             StatusTextBlock.Text = "Getting Current Observations....";
 
-            NoaaApi api = new NoaaApi(null);
+            Api api = new Api(null);
             Windows.Storage.StorageFolder storageFolder =    Windows.Storage.ApplicationData.Current.LocalFolder;
 
             IEnumerable<Models.Station> stations = await api.GetStationsAsync();

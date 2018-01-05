@@ -33,7 +33,7 @@ namespace OpenWeather.Example.Uwp
             }
             else
             {
-                NoaaApi api = new NoaaApi(null);
+                Noaa.Api api = new Noaa.Api();
                 stations = await api.GetStationsAsync();
                 xmlSerializer.Serialize(await storageFolder.OpenStreamForWriteAsync("Stations.dat", CreationCollisionOption.ReplaceExisting), stations);
             }

@@ -5,17 +5,28 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace OpenWeather
+namespace OpenWeather.Noaa
 {
+    /// <summary>
+    /// Parses the station file downloaded from NOAA's web site.
+    /// </summary>
     internal class StationFileParser
     {
         private readonly Uri _uri;
 
-        public StationFileParser(string uri)
+        /// <summary>
+        /// Creates a new <see cref="StationFileParser"/> Object.
+        /// </summary>
+        /// <param name="url">The url to download the data from.</param>
+        public StationFileParser(string url)
         {
-            _uri = new Uri(uri);
+            _uri = new Uri(url);
         }
 
+        /// <summary>
+        /// Returns the stations found on NOAA's web site.
+        /// </summary>
+        /// <returns></returns>
         internal async Task<IEnumerable<Station>> GetStationsAsync()
         {
             string stationsFileContent = null;
@@ -33,6 +44,11 @@ namespace OpenWeather
             return await ParseStationsAsync(stationsFileContent);
         }
 
+        /// <summary>
+        /// Parses the file and returns an <see cref="IEnumerable{Station}"/>.
+        /// </summary>
+        /// <param name="stationsFileContent">The file content string.</param>
+        /// <returns></returns>
         private async Task<IEnumerable<Station>> ParseStationsAsync(string stationsFileContent)
         {
             List<Station> stations = new List<Station>();
