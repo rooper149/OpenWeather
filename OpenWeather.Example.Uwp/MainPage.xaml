@@ -13,5 +13,8 @@
         <PivotItem Header="Current Observations">
             <local:CurrentObservations />
         </PivotItem>
+        <PivotItem Header="Forecasts">
+            <local:Forecasts />
+        </PivotItem>
     </Pivot>
 </Page>

@@ -1,10 +1,5 @@
-﻿using OpenWeather.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System;
 using System.Linq;
-using System.Xml.Serialization;
-using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
 
@@ -17,32 +12,21 @@ namespace OpenWeather.Example.Uwp
         public Stations()
         {
             this.InitializeComponent();
+            Global.StationsUpdated += Global_StationsUpdated;
+            Global_StationsUpdated(null, null);
         }
 
-
-        private async void UserControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void Global_StationsUpdated(object sender, EventArgs e)
         {
+            if (Global.Stations == null) return;
 
-            IEnumerable<Station> stations = null;
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Station>));
-            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-
-            if (await storageFolder.TryGetItemAsync("Stations.dat") != null)
-            {
-                stations = (List<Station>)xmlSerializer.Deserialize(await storageFolder.OpenStreamForReadAsync("Stations.dat"));
-            }
-            else
-            {
-                Noaa.Api api = new Noaa.Api();
-                stations = await api.GetStationsAsync();
-                xmlSerializer.Serialize(await storageFolder.OpenStreamForWriteAsync("Stations.dat", CreationCollisionOption.ReplaceExisting), stations);
-            }
-
-
-            cvs.Source = stations
+            cvs.Source = Global.Stations
                 .OrderBy(x => x.CountryCode)
                 .ThenBy(x => x.Name)
                 .GroupBy(x => Bia.Countries.Iso3166.Countries.GetCountryByAlpha2(x.CountryCode));
+
         }
+
+
     }
 }

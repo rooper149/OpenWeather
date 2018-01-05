@@ -117,7 +117,7 @@ namespace OpenWeather.Noaa
             EndpointAddress endpointAddress = new EndpointAddress("https://graphical.weather.gov:443/xml/SOAP_server/ndfdXMLserver.php");
             CustomBinding binding = new CustomBinding(
                 new CustomTextMessageBindingElement("iso-8859-1", "text/xml", MessageVersion.Soap11),
-                new HttpsTransportBindingElement());
+                new HttpsTransportBindingElement() { MaxReceivedMessageSize = 2097152 });
             ndfdXMLPortTypeClient client = new ndfdXMLPortTypeClient(binding, endpointAddress);
             client.Endpoint.EndpointBehaviors.Add(new HttpUserAgentEndpointBehavior("Myself"));
             return client;

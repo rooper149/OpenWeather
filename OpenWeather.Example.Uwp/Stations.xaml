@@ -9,7 +9,6 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     x:Name="StationsControl"
-    Loaded="UserControl_Loaded"
     DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <UserControl.Resources>
         <CollectionViewSource x:Key="cvs" x:Name="cvs" IsSourceGrouped="True" />

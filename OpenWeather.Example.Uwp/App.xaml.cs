@@ -1,18 +1,13 @@
-﻿using System;
+﻿using OpenWeather.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml.Serialization;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace OpenWeather.Example.Uwp
@@ -37,7 +32,7 @@ namespace OpenWeather.Example.Uwp
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -70,6 +65,22 @@ namespace OpenWeather.Example.Uwp
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
+
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Station>));
+                StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+
+                if (await storageFolder.TryGetItemAsync("Stations.dat") != null)
+                {
+                    Global.Stations = (List<Station>)xmlSerializer.Deserialize(await storageFolder.OpenStreamForReadAsync("Stations.dat"));
+                }
+                else
+                {
+                    Noaa.Api api = new Noaa.Api();
+                    Global.Stations = await api.GetStationsAsync();
+                    xmlSerializer.Serialize(await storageFolder.OpenStreamForWriteAsync("Stations.dat", CreationCollisionOption.ReplaceExisting), Global.Stations);
+                }
+
+                Global.RaiseStationsUpdated();
             }
         }
 

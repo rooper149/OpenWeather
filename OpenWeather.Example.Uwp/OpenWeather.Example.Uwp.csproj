@@ -98,6 +98,10 @@
     <Compile Include="CurrentObservations.xaml.cs">
       <DependentUpon>CurrentObservations.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forecasts.xaml.cs">
+      <DependentUpon>Forecasts.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Global.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -128,6 +132,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="CurrentObservations.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forecasts.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
