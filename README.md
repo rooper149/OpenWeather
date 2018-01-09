@@ -1,4 +1,4 @@
-## [![nuget](https://img.shields.io/nuget/v/OpenWeather.Core.svg)](https://www.nuget.org/packages/OpenWeather.Core/)
+# [![nuget](https://img.shields.io/nuget/v/OpenWeather.Core.svg)](https://www.nuget.org/packages/OpenWeather.Core/)
    
 # OpenWeather .NET Standard Fork
 This is a fork for the original open weather - using NOAA data.
@@ -28,7 +28,7 @@ Downloaded through NOAA's NDFD php based web service. This module allows you to 
    - Min Temp
    - Min Humiditiy
    
-- Note: That the data available is up to the feeds publisher. For example, Elkhart, IN (KEKM) can hold 2 days of history.
+*Note: That the data available is up to the feeds publisher. For example, Elkhart, IN (KEKM) can hold 2 days of history.*
 
 # Original Project
 ## OpenWeather
