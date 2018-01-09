@@ -13,8 +13,9 @@ Downloaded from NOAA; It contains all available stations worldwide. It is recomm
 ### Current Observations ###
 Downloaded through the NOAA xml service. This module compiles a url to download information in xml format. This module then compiles the information into easy-to-use CLR object.
 
-### Forcast and Forcast History ###
-Downloaded through NOAA's NDFD php based web service. This module allows you to query for 98% of the information available. It will then product a time line containing with the results. The timeline will skip times if there are no informaiton available.
+### Forecast and Forecast History ###
+Downloaded through NOAA's NDFD php based web service. This module allows you to query for 98% of the information available as well as past data. It will then product a time line containing with the results. The timeline will skip times if there are no informaiton available.
+- Note: That the data available is up to the feeds publisher. For example, Elkhart, IN (KEKM) can hold 2 days of history.
 
 [Example]
 - 05:00
