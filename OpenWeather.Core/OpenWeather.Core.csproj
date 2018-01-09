@@ -8,6 +8,7 @@
     <RepositoryType>Utility</RepositoryType>
     <PackageTags>weather, noaa</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>1.0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
