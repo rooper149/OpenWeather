@@ -1,4 +1,4 @@
-##[![nuget](https://img.shields.io/nuget/v/OpenWeather.Core.svg)](https://www.nuget.org/packages/OpenWeather.Core/)
+## [![nuget](https://img.shields.io/nuget/v/OpenWeather.Core.svg)](https://www.nuget.org/packages/OpenWeather.Core/)
    
 # OpenWeather .NET Standard Fork
 This is a fork for the original open weather - using NOAA data.
