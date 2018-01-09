@@ -15,7 +15,6 @@ Downloaded through the NOAA xml service. This module compiles a url to download 
 
 ### Forecast and Forecast History ###
 Downloaded through NOAA's NDFD php based web service. This module allows you to query for 98% of the information available as well as past data. It will then product a time line containing with the results. The timeline will skip times if there are no informaiton available.
-- Note: That the data available is up to the feeds publisher. For example, Elkhart, IN (KEKM) can hold 2 days of history.
 
 [Example]
 - 05:00
@@ -28,6 +27,8 @@ Downloaded through NOAA's NDFD php based web service. This module allows you to 
    - Weather Condition
    - Min Temp
    - Min Humiditiy
+   
+- Note: That the data available is up to the feeds publisher. For example, Elkhart, IN (KEKM) can hold 2 days of history.
 
 # Original Project
 ## OpenWeather
