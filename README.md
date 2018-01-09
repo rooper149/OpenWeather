@@ -1,5 +1,6 @@
 # OpenWeather .NET Standard Fork #
 [![nuget](https://img.shields.io/nuget/v/OpenWeather.Core.svg)](https://www.nuget.org/packages/OpenWeather.Core/)
+[![dynamensions MyGet Build Status](https://www.myget.org/BuildSource/Badge/dynamensions?identifier=8dc4acf3-b3f3-4315-811e-2058ec66d901)](https://www.myget.org/)
 
 This is a fork for the original open weather - using NOAA data.
 - Utilized Task Parallel Library (TPL) 
@@ -14,7 +15,7 @@ Downloaded from NOAA; It contains all available stations worldwide. It is recomm
 Downloaded through the NOAA xml service. This module compiles a url to download information in xml format. This module then compiles the information into easy-to-use CLR object.
 
 ### Forecast and Forecast History ###
-Downloaded through NOAA's NDFD php based web service. This module allows you to query for 98% of the information available as well as past data. It will then product a time line containing with the results. The timeline will skip times if there are no informaiton available.
+Downloaded through NOAA's NDFD php based web service. This module allows you to query for 98% of the information available as well as past data. It will then produce a timeline containing with the results. The timeline will skip times if there are no informaiton available.
 
 [Example]
 - 05:00
