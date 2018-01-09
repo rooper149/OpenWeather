@@ -1,4 +1,4 @@
-﻿using OpenWeather.Models;
+﻿using OpenWeather.Noaa.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;

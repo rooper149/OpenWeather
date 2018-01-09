@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenWeather.Noaa.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
@@ -37,9 +38,9 @@ namespace OpenWeather.Example.Uwp
             Noaa.Api api = new Noaa.Api();
             Windows.Storage.StorageFolder storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
-            IEnumerable<Models.Station> stations = await api.GetStationsAsync();
-            Models.Station station = stations.SingleOrDefault(x => x.ICAO == "KGSH");
-            Models.CurrentObservation currentObservations = await api.GetCurrentObservationsByStationAsync(station);
+            IEnumerable<Station> stations = await api.GetStationsAsync();
+            Station station = stations.SingleOrDefault(x => x.ICAO == "KGSH");
+            CurrentObservation currentObservations = await api.GetCurrentObservationsByStationAsync(station);
             if (currentObservations != null)
             {
                 StationInformationTextBlock.Text = $"{currentObservations.Location}{Environment.NewLine}({station.ICAO}) {station.Latitude} {station.Longitude}";

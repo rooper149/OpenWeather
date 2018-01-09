@@ -1,4 +1,4 @@
-﻿namespace OpenWeather.Models
+﻿namespace OpenWeather.Noaa.Models
 {
     /// <summary>
     /// Parameters used by the National Digital Forecast Database XML Web Service

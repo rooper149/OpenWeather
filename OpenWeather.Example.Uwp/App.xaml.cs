@@ -1,5 +1,4 @@
-﻿using OpenWeather.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
@@ -9,6 +8,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using OpenWeather.Noaa.Models;
 
 namespace OpenWeather.Example.Uwp
 {
@@ -71,7 +71,7 @@ namespace OpenWeather.Example.Uwp
 
                 if (await storageFolder.TryGetItemAsync("Stations.dat") != null)
                 {
-                    Global.Stations = (List<Station>)xmlSerializer.Deserialize(await storageFolder.OpenStreamForReadAsync("Stations.dat"));
+                    Global.Stations = (IEnumerable<Station>)xmlSerializer.Deserialize(await storageFolder.OpenStreamForReadAsync("Stations.dat"));
                 }
                 else
                 {

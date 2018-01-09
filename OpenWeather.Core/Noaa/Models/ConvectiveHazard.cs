@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace OpenWeather.Models.Noaa
+namespace OpenWeather.Noaa.Models
 {
     public enum ConvectiveHazardUnits
     {
+        None,
         Percent
     }
 

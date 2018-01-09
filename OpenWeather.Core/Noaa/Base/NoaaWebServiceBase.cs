@@ -1,11 +1,12 @@
 ﻿using gov.weather.graphical;
 using OpenWeather.Php;
+using System;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 
-namespace OpenWeather.Noaa
+namespace OpenWeather.Noaa.Base
 {
     /// <summary>
     /// The unit of measurement used on the response
@@ -120,6 +121,10 @@ namespace OpenWeather.Noaa
                 new HttpsTransportBindingElement() { MaxReceivedMessageSize = 2097152 });
             ndfdXMLPortTypeClient client = new ndfdXMLPortTypeClient(binding, endpointAddress);
             client.Endpoint.EndpointBehaviors.Add(new HttpUserAgentEndpointBehavior("Myself"));
+            client.Endpoint.Binding.OpenTimeout = TimeSpan.FromMinutes(1);
+            client.Endpoint.Binding.CloseTimeout = TimeSpan.FromMinutes(1);
+            client.Endpoint.Binding.SendTimeout = TimeSpan.FromMinutes(10);
+            client.Endpoint.Binding.ReceiveTimeout = TimeSpan.FromMinutes(10);
             return client;
         }
 

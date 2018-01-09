@@ -1,369 +1,888 @@
-﻿using OpenWeather.Models;
+﻿using OpenWeather.Noaa.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace OpenWeather.Noaa
 {
     internal class ForecastParser
     {
-        private struct LayoutTimes
+        internal Forecast ParseForecastResult(string result)
         {
-            internal DateTime startDateTime, endDateTime;
-        }
+            Dwml dwml = new Dwml(result);
+            Forecast forecast = new Forecast();
 
-        private struct TimeLayout
-        {
-            internal string key;
-            internal List<LayoutTimes> times;
+            IEnumerable<TemperatureValue> apparentTemperatureValues = dwml.Data.TemperatureApparent?.Values;
+            IEnumerable<TemperatureValue> dewpointTemperatureValues = dwml.Data.TemperatureDewpoint?.Values;
+            IEnumerable<TemperatureValue> hourlyTemperatureValues = dwml.Data.TemperatureHourly?.Values;
+            IEnumerable<TemperatureValue> maximumTemperatureValues = dwml.Data.TemperatureMaximum?.Values;
+            IEnumerable<TemperatureValue> minimumTemperatureValues = dwml.Data.TemperatureMinimum?.Values;
 
-            internal TimeLayout(XElement element)
+            IEnumerable<PrecipitationValue> precipitationIceValues = dwml.Data.PrecipitationIce?.Values;
+            IEnumerable<PrecipitationValue> precipitationLiquidValues = dwml.Data.PrecipitationLiquid?.Values;
+            IEnumerable<PrecipitationValue> precipitationSnowValues = dwml.Data.PrecipitationSnow?.Values;
+            IEnumerable<ProbabilityOfPrecipitationValue> precipitation12HourProbabilityValues = dwml.Data.PrecipitationProbabilityOf12Hour?.Values;
+
+            IEnumerable<WindSpeedValue> windSpeedGustValues = dwml.Data.WindSpeedGust?.Values;
+            IEnumerable<WindSpeedValue> windSpeedSustainedValues = dwml.Data.WindSpeedGust?.Values;
+            IEnumerable<WindSpeedValue> windSpeedIncremental34Values = dwml.Data.WindSpeedIncremental34?.Values;
+            IEnumerable<WindSpeedValue> windSpeedIncremental50Values = dwml.Data.WindSpeedIncremental50?.Values;
+            IEnumerable<WindSpeedValue> windSpeedIncremental64Values = dwml.Data.WindSpeedIncremental64?.Values;
+            IEnumerable<WindSpeedValue> windSpeedCumulative34Values = dwml.Data.WindSpeedCumulative34?.Values;
+            IEnumerable<WindSpeedValue> windSpeedCumulative50Values = dwml.Data.WindSpeedCumulative50?.Values;
+            IEnumerable<WindSpeedValue> windSpeedCumulative64Values = dwml.Data.WindSpeedCumulative64?.Values;
+
+            IEnumerable<HumidityValue> humidityReleativeValues = dwml.Data.HumidityReleative?.Values;
+            IEnumerable<HumidityValue> humidityMaximumReleativeValues = dwml.Data.HumidityMaximumReleative?.Values;
+            IEnumerable<HumidityValue> humidityMinimumReleativeValues = dwml.Data.HumidityMinimumReleative?.Values;
+
+            IEnumerable<ConvectiveHazardValue> convectiveHazardOutlookValues = dwml.Data.ConvectiveHazardOutlook?.Values;
+            IEnumerable<ConvectiveHazardValue> convectiveHazardTornadoesValues = dwml.Data.ConvectiveHazardTornadoes?.Values;
+            IEnumerable<ConvectiveHazardValue> convectiveHazardHailValues = dwml.Data.ConvectiveHazardHail?.Values;
+            IEnumerable<ConvectiveHazardValue> convectiveHazardDamagingThunderstormWindsValues = dwml.Data.ConvectiveHazardDamagingThunderstormWinds?.Values;
+            IEnumerable<ConvectiveHazardValue> convectiveHazardExtremeTornadoesValues = dwml.Data.ConvectiveHazardExtremeTornadoes?.Values;
+            IEnumerable<ConvectiveHazardValue> convectiveHazardExtremeHailValues = dwml.Data.ConvectiveHazardExtremeHail?.Values;
+            IEnumerable<ConvectiveHazardValue> convectiveHazardExtremeThunderstormWindsValues = dwml.Data.ConvectiveHazardExtremeThunderstormWinds?.Values;
+            IEnumerable<ConvectiveHazardValue> convectiveHazardSevereThunderstormValues = dwml.Data.ConvectiveHazardSevereThunderstorms?.Values;
+            IEnumerable<ConvectiveHazardValue> convectiveHazardExtremeSevereThunderstormsValues = dwml.Data.ConvectiveHazardExtremeSevereThunderstorms?.Values;
+
+            IEnumerable<FireWeatherValue> fireWeatherRiskFromWindAndRelativeHumidityValues = dwml.Data.FireWeatherRiskFromWindAndRelativeHumidity?.Values;
+            IEnumerable<FireWeatherValue> fireWeatherRiskFromDryThunderstormValues = dwml.Data.FireWeatherRiskFromDryThunderstorms?.Values;
+
+            IEnumerable<ClimateAnomalyValue> climateAnomalyWeeklyTemperatureAboveNormalValues = dwml.Data.ClimateAnomalyWeeklyTemperatureAboveNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalyWeeklyTemperatureBelowNormalValues = dwml.Data.ClimateAnomalyWeeklyTemperatureBelowNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalyMonthlyTemperatureAboveNormalValues = dwml.Data.ClimateAnomalyMonthlyTemperatureAboveNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalyMonthlyTemperatureBelowNormalValues = dwml.Data.ClimateAnomalyMonthlyTemperatureBelowNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalySeasonalTemperatureAboveNormalValues = dwml.Data.ClimateAnomalySeasonalTemperatureAboveNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalySeasonalTemperatureBelowNormalValues = dwml.Data.ClimateAnomalySeasonalTemperatureBelowNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalyWeeklyPrecipitationAboveNormalValues = dwml.Data.ClimateAnomalyWeeklyPrecipitationAboveNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalyWeeklyPrecipitationBelowNormalValues = dwml.Data.ClimateAnomalyWeeklyPrecipitationBelowNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalyMonthlyPrecipitationAboveNormalValues = dwml.Data.ClimateAnomalyMonthlyPrecipitationAboveNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalyMonthlyPrecipitationBelowNormalValues = dwml.Data.ClimateAnomalyMonthlyPrecipitationBelowNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalySeasonalPrecipitationAboveNormalValues = dwml.Data.ClimateAnomalySeasonalPrecipitationAboveNormal?.Values;
+            IEnumerable<ClimateAnomalyValue> climateAnomalySeasonalPrecipitationBelowNormalValues = dwml.Data.ClimateAnomalySeasonalPrecipitationBelowNormal?.Values;
+
+
+            IEnumerable<WindDirectionValue> windDirectionValues = dwml.Data.WindDirection?.Values;
+            IEnumerable<WeatherConditions> weatherConditions = dwml.Data.Weather?.Conditions;
+            IEnumerable<ConditionIconValue> conditionIconValues = dwml.Data.ConditionIcons?.Values;
+            IEnumerable<CloudAmountValue> cloudAmountValues = dwml.Data.CloudAmount?.Values;
+
+
+            DateTime currentDateTime = dwml.Data.EarliestDateTime;
+            while (currentDateTime <= dwml.Data.LatestDateTime)
             {
-                key = element.Element("layout-key").Value;
-                times = new List<LayoutTimes>();
 
-                List<DateTime> startDateTimes = new List<DateTime>();
-                List<DateTime> endDateTimes = new List<DateTime>();
+                ForecastTimeLine forecastTimeLine = new ForecastTimeLine();
+                forecastTimeLine.DateTime = currentDateTime;
 
-                foreach (XElement sdtElement in element.Elements("start-valid-time"))
+                // maximum temperature
+                TemperatureValue maximumTemperatureValue = maximumTemperatureValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime >= currentDateTime);
+                if (maximumTemperatureValue != null)
                 {
-                    DateTime dateTime;
-                    DateTime.TryParse(sdtElement.Value, out dateTime);
-                    startDateTimes.Add(dateTime);
+
+                    ForecastValue<double> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.TemperatureMaximum)
+                        .Where(x => x?.Value == maximumTemperatureValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<double>() { Value = maximumTemperatureValue.Value, IsStart = maximumTemperatureValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.TemperatureMaximum = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = maximumTemperatureValue.EndDateTime == currentDateTime;
                 }
 
-                foreach (XElement edtElement in element.Elements("end-valid-time"))
+                // minimum temperature
+                TemperatureValue minimumTemperatureValue = minimumTemperatureValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime >= currentDateTime);
+                if (minimumTemperatureValue != null)
                 {
-                    DateTime dateTime;
-                    DateTime.TryParse(edtElement.Value, out dateTime);
-                    endDateTimes.Add(dateTime);
+
+                    ForecastValue<double> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.TemperatureMinimum)
+                        .Where(x => x?.Value == minimumTemperatureValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<double>() { Value = minimumTemperatureValue.Value, IsStart = minimumTemperatureValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.TemperatureMinimum = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = minimumTemperatureValue.EndDateTime == currentDateTime;
                 }
 
-                for (int i = 0; i < startDateTimes.Count; i++)
+                // hourly temperature
+                TemperatureValue hourlyTemperatureValue = hourlyTemperatureValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
+                if (hourlyTemperatureValue != null)
                 {
-                    DateTime startDateTime = startDateTimes[i];
-                    DateTime endDateTime = startDateTimes[i];
-                    if (endDateTimes.Count - 1 >= i) endDateTime = endDateTimes[i];
-
-                    times.Add(new LayoutTimes() { startDateTime = startDateTime, endDateTime = endDateTime });
+                    forecastTimeLine.TemperatureHourly = new ForecastValue<double>()
+                    {
+                        Value = hourlyTemperatureValue.Value,
+                        IsStart = true,
+                        IsEnd = true
+                    };
                 }
-            }
-        }
 
-        private enum TemperatureTypes
-        {
-            Maximum,
-            Minimum,
-            Apparent,
-            Dewpoint,
-            Hourly
-        }
-
-        private enum PrecipitationTypes
-        {
-            Ice,
-            Snow,
-            Liquid
-        }
-
-        private enum WindSpeedTypes
-        {
-            Gust,
-            Sustained,
-            Incremental34,
-            Incremental50,
-            Incremental64,
-            Cumulative34,
-            Cumulative50,
-            Cumulative64
-        }
-
-        private enum HumidityTypes
-        {
-            Relative,
-            MaximumRelative,
-            MinimumRelative
-        }
-
-        private enum ConvectiveHazardTypes
-        {
-            Tornadoes,
-            Hail,
-            DamagingThunderstormWinds,
-        }
-
-
-        List<TimeLayout> timeLayouts = new List<TimeLayout>();
-        List<Forecast> forecasts = new List<Forecast>();
-
-        internal IEnumerable<Forecast> ParseForecastResult(string result)
-        {
-            XDocument doc = XDocument.Parse(result);
-            XElement dataElement = doc.Element("dwml").Element("data");
-
-            // Time layouts
-            IEnumerable<XElement> timeLayoutElements = dataElement.Elements("time-layout");
-            foreach (var item in timeLayoutElements)
-            {
-                timeLayouts.Add(new TimeLayout(item));
-            }
-
-            // TODO: Rewrite the get methods to not use enums, but to use strings.
-            // TODO: Add cevective-hazord=>outlook from xml.
-            // Parameters (forcasts)
-            XElement parametersElement = dataElement.Element("parameters");
-            Models.Noaa.Temperature maxTemperature = GetTemperature(parametersElement, TemperatureTypes.Maximum);
-            Models.Noaa.Temperature minTemperature = GetTemperature(parametersElement, TemperatureTypes.Minimum);
-            Models.Noaa.Temperature apparentTemperature = GetTemperature(parametersElement, TemperatureTypes.Apparent);
-            Models.Noaa.Temperature dewpointTemperature = GetTemperature(parametersElement, TemperatureTypes.Dewpoint);
-            Models.Noaa.Temperature hourlyTemperature = GetTemperature(parametersElement, TemperatureTypes.Hourly);
-
-            Models.Noaa.Precipitation liquidPrecipitation = GetPrecipitation(parametersElement, PrecipitationTypes.Liquid);
-            Models.Noaa.Precipitation icePrecipitation = GetPrecipitation(parametersElement, PrecipitationTypes.Ice);
-            Models.Noaa.Precipitation snowPrecipitation = GetPrecipitation(parametersElement, PrecipitationTypes.Snow);
-
-            Models.Noaa.WindSpeed gustWindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Gust);
-            Models.Noaa.WindSpeed sustainedWindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Sustained);
-            Models.Noaa.WindSpeed incremental34WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Incremental34);
-            Models.Noaa.WindSpeed incremental50WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Incremental50);
-            Models.Noaa.WindSpeed incremental64WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Incremental64);
-            Models.Noaa.WindSpeed cumulative34WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Cumulative34);
-            Models.Noaa.WindSpeed cumulative50WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Cumulative50);
-            Models.Noaa.WindSpeed cumulative64WindSpeed = GetWindSpeed(parametersElement, WindSpeedTypes.Cumulative64);
-
-            Models.Noaa.Humidity releativeHumidity = GetHumidity(parametersElement, HumidityTypes.Relative);
-            Models.Noaa.Humidity maxReleativeHumidity = GetHumidity(parametersElement, HumidityTypes.MaximumRelative);
-            Models.Noaa.Humidity minRleativeHumidity = GetHumidity(parametersElement, HumidityTypes.MinimumRelative);
-
-            Models.Noaa.ConvectiveHazard tornadoesConvectiveHazard = GetConvectiveHazard(parametersElement, "tornadoes");
-            Models.Noaa.ConvectiveHazard hailConvectiveHazard = GetConvectiveHazard(parametersElement, "hail");
-            Models.Noaa.ConvectiveHazard damagingThunderstormWindsConvectiveHazard = GetConvectiveHazard(parametersElement, "damaging thunderstorm winds");
-            Models.Noaa.ConvectiveHazard extremeTornadoesConvectiveHazard = GetConvectiveHazard(parametersElement, "extreme tornadoes");
-            Models.Noaa.ConvectiveHazard extremeHailConvectiveHazard = GetConvectiveHazard(parametersElement, "extreme hail");
-            Models.Noaa.ConvectiveHazard extremeThunderstormWindsConvectiveHazard = GetConvectiveHazard(parametersElement, "extreme thunderstorm winds");
-            Models.Noaa.ConvectiveHazard severeThunderstormsConvectiveHazard = GetConvectiveHazard(parametersElement, "severe thunderstorms");
-            Models.Noaa.ConvectiveHazard extremeSevereThunderstormsConvectiveHazard = GetConvectiveHazard(parametersElement, "extreme severe thunderstorms");
-
-
-            return null;
-
-        }
-
-        #region Parsing Methods
-
-        private Models.Noaa.Temperature GetTemperature(XElement parametersElement, TemperatureTypes temperatureType)
-        {
-            if (parametersElement == null) return null;
-            string temperatureTypeValue;
-
-            switch (temperatureType)
-            {
-                case TemperatureTypes.Dewpoint:
-                    temperatureTypeValue = "dew point";
-                    break;
-                default:
-                    temperatureTypeValue = temperatureType.ToString().ToLower();
-                    break;
-            }
-
-            XElement temperatureElement = parametersElement.Elements("temperature").Where(x => x.Attribute("type").Value == temperatureTypeValue).SingleOrDefault();
-            if (temperatureElement == null) return null;
-
-            TimeLayout timeLayout = timeLayouts.SingleOrDefault(x => x.key == temperatureElement.Attribute("time-layout").Value);
-
-            IEnumerable<XElement> valueElements = temperatureElement.Elements("value");
-            if (valueElements == null || valueElements.Count() == 0) return null;
-
-            Models.Noaa.Temperature temperature = new Models.Noaa.Temperature()
-            {
-                Title = temperatureElement.Element("name").Value,
-                Unit = (Models.Noaa.TemperatureUnits)Enum.Parse(typeof(Models.Noaa.TemperatureUnits), temperatureElement.Attribute("units").Value, true),
-                Values = new List<Models.Noaa.TemperatureValue>()
-            };
-
-            List<XElement> valueElementsList = valueElements.ToList();
-            for (int i = 0; i < valueElementsList.Count; i++)
-            {
-                temperature.Values.Add(new Models.Noaa.TemperatureValue()
+                // dewpoint temperature
+                TemperatureValue dewpointTemperatureValue = dewpointTemperatureValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
+                if (dewpointTemperatureValue != null)
                 {
-                    StartDateTime = timeLayout.times[i].startDateTime,
-                    EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
-                });
-            }
+                    forecastTimeLine.TemperatureDewpoint = new ForecastValue<double>()
+                    {
+                        Value = dewpointTemperatureValue.Value,
+                        IsStart = true,
+                        IsEnd = true
+                    };
+                }
 
-            return temperature;
-        }
-
-        private Models.Noaa.Precipitation GetPrecipitation(XElement parametersElement, PrecipitationTypes precipitationType)
-        {
-            if (parametersElement == null) return null;
-            string precipitationTypeValue;
-
-            switch (precipitationType)
-            {
-                default:
-                    precipitationTypeValue = precipitationType.ToString().ToLower();
-                    break;
-            }
-
-            XElement precipitationElement = parametersElement.Elements("precipitation").Where(x => x.Attribute("type").Value == precipitationTypeValue).SingleOrDefault();
-            if (precipitationElement == null) return null;
-
-            TimeLayout timeLayout = timeLayouts.SingleOrDefault(x => x.key == precipitationElement.Attribute("time-layout").Value);
-
-            IEnumerable<XElement> valueElements = precipitationElement.Elements("value");
-            if (valueElements == null || valueElements.Count() == 0) return null;
-
-            Models.Noaa.Precipitation precipitation = new Models.Noaa.Precipitation()
-            {
-                Title = precipitationElement.Element("name").Value,
-                Unit = (Models.Noaa.PrecipitationUnits)Enum.Parse(typeof(Models.Noaa.PrecipitationUnits), precipitationElement.Attribute("units").Value, true),
-                Values = new List<Models.Noaa.PrecipitationValue>()
-            };
-
-            List<XElement> valueElementsList = valueElements.ToList();
-            for (int i = 0; i < valueElementsList.Count; i++)
-            {
-                precipitation.Values.Add(new Models.Noaa.PrecipitationValue()
+                // apparent temperature
+                TemperatureValue apparentTemperatureValue = apparentTemperatureValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
+                if (apparentTemperatureValue != null)
                 {
-                    StartDateTime = timeLayout.times[i].startDateTime,
-                    EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
-                });
-            }
+                    forecastTimeLine.TemperatureApparent = new ForecastValue<double>() { Value = apparentTemperatureValue.Value, IsStart = true, IsEnd = true };
+                }
 
-            return precipitation;
-        }
-
-        private Models.Noaa.WindSpeed GetWindSpeed(XElement parametersElement, WindSpeedTypes windSpeedType)
-        {
-            if (parametersElement == null) return null;
-            string windSpeedTypeValue;
-
-            switch (windSpeedType)
-            {
-                default:
-                    windSpeedTypeValue = windSpeedType.ToString().ToLower();
-                    break;
-            }
-
-            XElement windSpeedElement = parametersElement.Elements("wind-speed").Where(x => x.Attribute("type").Value == windSpeedTypeValue).SingleOrDefault();
-            if (windSpeedElement == null) return null;
-
-            TimeLayout timeLayout = timeLayouts.SingleOrDefault(x => x.key == windSpeedElement.Attribute("time-layout").Value);
-
-            IEnumerable<XElement> valueElements = windSpeedElement.Elements("value");
-            if (valueElements == null || valueElements.Count() == 0) return null;
-
-            Models.Noaa.WindSpeed windSpeed = new Models.Noaa.WindSpeed()
-            {
-                Title = windSpeedElement.Element("name").Value,
-                Unit = (Models.Noaa.WindSpeedUnits)Enum.Parse(typeof(Models.Noaa.WindSpeedUnits), windSpeedElement.Attribute("units").Value, true),
-                Values = new List<Models.Noaa.WindSpeedValue>()
-            };
-
-            List<XElement> valueElementsList = valueElements.ToList();
-            for (int i = 0; i < valueElementsList.Count; i++)
-            {
-                windSpeed.Values.Add(new Models.Noaa.WindSpeedValue()
+                // ice precipitation
+                PrecipitationValue precipitationIceValue = precipitationIceValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (precipitationIceValue != null)
                 {
-                    StartDateTime = timeLayout.times[i].startDateTime,
-                    EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
-                });
-            }
+                    ForecastValue<PrecipitationValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.PrecipitationIce)
+                       .Where(x => x?.Value.Value == precipitationIceValue.Value)
+                       .SingleOrDefault();
 
-            return windSpeed;
-        }
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<PrecipitationValue>() { Value = precipitationIceValue, IsStart = precipitationIceValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.PrecipitationIce = forecastElement;
+                    }
 
-        private Models.Noaa.Humidity GetHumidity(XElement parametersElement, HumidityTypes humidityType)
-        {
-            if (parametersElement == null) return null;
-            string humidityTypeTypeValue;
+                    forecastElement.IsEnd = precipitationIceValue.EndDateTime == currentDateTime;
+                }
 
-            switch (humidityType)
-            {
-                case HumidityTypes.MaximumRelative:
-                    humidityTypeTypeValue = "maximum relative";
-                    break;
-                case HumidityTypes.MinimumRelative:
-                    humidityTypeTypeValue = "minimum relative";
-                    break;
-                default:
-                    humidityTypeTypeValue = humidityType.ToString().ToLower();
-                    break;
-            }
-
-            XElement humidityElement = parametersElement.Elements("humidity").Where(x => x.Attribute("type").Value == humidityTypeTypeValue).SingleOrDefault();
-            if (humidityElement == null) return null;
-
-            TimeLayout timeLayout = timeLayouts.SingleOrDefault(x => x.key == humidityElement.Attribute("time-layout").Value);
-
-            IEnumerable<XElement> valueElements = humidityElement.Elements("value");
-            if (valueElements == null || valueElements.Count() == 0) return null;
-
-            Models.Noaa.Humidity humidity = new Models.Noaa.Humidity()
-            {
-                Title = humidityElement.Element("name").Value,
-                Unit = (Models.Noaa.HumidityUnits)Enum.Parse(typeof(Models.Noaa.HumidityUnits), humidityElement.Attribute("units").Value, true),
-                Values = new List<Models.Noaa.HumidityValue>()
-            };
-
-            List<XElement> valueElementsList = valueElements.ToList();
-            for (int i = 0; i < valueElementsList.Count; i++)
-            {
-                humidity.Values.Add(new Models.Noaa.HumidityValue()
+                // snow precipitation
+                PrecipitationValue precipitationSnowValue = precipitationSnowValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (precipitationSnowValue != null)
                 {
-                    StartDateTime = timeLayout.times[i].startDateTime,
-                    EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
-                });
-            }
+                    ForecastValue<PrecipitationValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.PrecipitationSnow)
+                        .Where(x => x?.Value.Value == precipitationSnowValue.Value)
+                        .SingleOrDefault();
 
-            return humidity;
-        }
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<PrecipitationValue>() { Value = precipitationSnowValue, IsStart = precipitationSnowValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.PrecipitationSnow = forecastElement;
+                    }
 
-        private Models.Noaa.ConvectiveHazard GetConvectiveHazard(XElement parametersElement, string convectionHazardType)
-        {
-            if (parametersElement == null) return null;
-            
-            IEnumerable<XElement> convectiveHazardElement = convectiveHazardElement = parametersElement.Elements("convective-hazard").Select(x => x.Element("severe-component"));
-            if (convectiveHazardElement == null) return null;
-            
-            XElement severeComponentElement = convectiveHazardElement.Where(x => x != null && x.Attribute("type").Value == convectionHazardType).SingleOrDefault();
-            if (severeComponentElement == null) return null;
+                    forecastElement.IsEnd = precipitationSnowValue.EndDateTime == currentDateTime;
+                }
 
-            TimeLayout timeLayout = timeLayouts.SingleOrDefault(x => x.key == severeComponentElement.Attribute("time-layout").Value);
-
-            IEnumerable<XElement> valueElements = severeComponentElement.Elements("value");
-            if (valueElements == null || valueElements.Count() == 0) return null;
-
-            Models.Noaa.ConvectiveHazard convectiveHazard = new Models.Noaa.ConvectiveHazard()
-            {
-                Title = severeComponentElement.Element("name").Value,
-                Unit = (Models.Noaa.ConvectiveHazardUnits)Enum.Parse(typeof(Models.Noaa.ConvectiveHazardUnits), severeComponentElement.Attribute("units").Value, true),
-                Values = new List<Models.Noaa.ConvectiveHazardValue>()
-            };
-
-            List<XElement> valueElementsList = valueElements.ToList();
-            for (int i = 0; i < valueElementsList.Count; i++)
-            {
-                convectiveHazard.Values.Add(new Models.Noaa.ConvectiveHazardValue()
+                // liquid precipitation
+                PrecipitationValue precipitationLiquidValue = precipitationLiquidValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (precipitationLiquidValue != null)
                 {
-                    StartDateTime = timeLayout.times[i].startDateTime,
-                    EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
-                });
+                    ForecastValue<PrecipitationValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.PrecipitationLiquid)
+                       .Where(x => x?.Value.Value == precipitationLiquidValue.Value)
+                       .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<PrecipitationValue>() { Value = precipitationLiquidValue, IsStart = precipitationLiquidValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.PrecipitationLiquid = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = precipitationLiquidValue.EndDateTime == currentDateTime;
+                }
+
+                // probaility of precipitation
+                ProbabilityOfPrecipitationValue probabilityOfPrecipitationValue = precipitation12HourProbabilityValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (probabilityOfPrecipitationValue != null)
+                {
+                    ForecastValue<ProbabilityOfPrecipitationValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.ProbabilityOfPrecipitation)
+                       .Where(x => x?.Value.Value == probabilityOfPrecipitationValue.Value)
+                       .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ProbabilityOfPrecipitationValue>() { Value = probabilityOfPrecipitationValue, IsStart = probabilityOfPrecipitationValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ProbabilityOfPrecipitation = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = probabilityOfPrecipitationValue.EndDateTime == currentDateTime;
+                }
+
+                // wind speed - gusts
+                WindSpeedValue windSpeedGustValue = windSpeedGustValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (windSpeedGustValue != null)
+                {
+                    ForecastValue<WindSpeedValue> forecastElement = forecast.Timelines
+                      .Where(x => x.DateTime <= currentDateTime)
+                      .Select(x => x.WindSpeedGust)
+                      .Where(x => x?.Value.Value == windSpeedGustValue.Value)
+                      .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<WindSpeedValue>() { Value = windSpeedGustValue, IsStart = windSpeedGustValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.WindSpeedGust = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = windSpeedGustValue.EndDateTime == currentDateTime;
+                }
+
+                // wind speed - sustained
+                WindSpeedValue windSpeedSustainedValue = windSpeedSustainedValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
+                if (windSpeedSustainedValue != null)
+                {
+                    forecastTimeLine.WindSpeedSustained = new ForecastValue<double>() { Value = windSpeedSustainedValue.Value, IsStart = true, IsEnd = true };
+                }
+
+                // wind speed - incremental34
+                WindSpeedValue windSpeedIncremental34Value = windSpeedIncremental34Values?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (windSpeedIncremental34Value != null)
+                {
+                    ForecastValue<WindSpeedValue> forecastElement = forecast.Timelines
+                      .Where(x => x.DateTime <= currentDateTime)
+                      .Select(x => x.WindSpeedCumulative34)
+                      .Where(x => x?.Value.Value == windSpeedIncremental34Value.Value)
+                      .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<WindSpeedValue>() { Value = windSpeedIncremental34Value, IsStart = windSpeedIncremental34Value.StartDateTime == currentDateTime };
+                        forecastTimeLine.WindSpeedCumulative34 = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = windSpeedIncremental34Value.EndDateTime == currentDateTime;
+                }
+
+                // wind speed - incremental50
+                WindSpeedValue windSpeedIncremental50Value = windSpeedIncremental50Values?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (windSpeedIncremental50Value != null)
+                {
+                    ForecastValue<WindSpeedValue> forecastElement = forecast.Timelines
+                      .Where(x => x.DateTime <= currentDateTime)
+                      .Select(x => x.WindSpeedIncremental50)
+                      .Where(x => x?.Value.Value == windSpeedIncremental50Value.Value)
+                      .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<WindSpeedValue>() { Value = windSpeedIncremental50Value, IsStart = windSpeedIncremental50Value.StartDateTime == currentDateTime };
+                        forecastTimeLine.WindSpeedIncremental50 = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = windSpeedIncremental50Value.EndDateTime == currentDateTime;
+                }
+
+                // wind speed - incremental64
+                WindSpeedValue windSpeedIncremental64Value = windSpeedIncremental64Values?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (windSpeedIncremental64Value != null)
+                {
+                    ForecastValue<WindSpeedValue> forecastElement = forecast.Timelines
+                      .Where(x => x.DateTime <= currentDateTime)
+                      .Select(x => x.WindSpeedIncremental64)
+                      .Where(x => x?.Value.Value == windSpeedIncremental64Value.Value)
+                      .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<WindSpeedValue>() { Value = windSpeedIncremental64Value, IsStart = windSpeedIncremental64Value.StartDateTime == currentDateTime };
+                        forecastTimeLine.WindSpeedIncremental64 = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = windSpeedIncremental64Value.EndDateTime == currentDateTime;
+                }
+
+                // wind speed - cumulative34
+                WindSpeedValue windSpeedCumulative34Value = windSpeedIncremental34Values?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (windSpeedIncremental34Value != null)
+                {
+                    ForecastValue<WindSpeedValue> forecastElement = forecast.Timelines
+                      .Where(x => x.DateTime <= currentDateTime)
+                      .Select(x => x.WindSpeedCumulative34)
+                      .Where(x => x?.Value.Value == windSpeedCumulative34Value.Value)
+                      .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<WindSpeedValue>() { Value = windSpeedCumulative34Value, IsStart = windSpeedCumulative34Value.StartDateTime == currentDateTime };
+                        forecastTimeLine.WindSpeedCumulative34 = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = windSpeedCumulative34Value.EndDateTime == currentDateTime;
+                }
+
+                // wind speed - cumulative50
+                WindSpeedValue windSpeedCumulative50Value = windSpeedIncremental50Values?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (windSpeedIncremental50Value != null)
+                {
+                    ForecastValue<WindSpeedValue> forecastElement = forecast.Timelines
+                      .Where(x => x.DateTime <= currentDateTime)
+                      .Select(x => x.WindSpeedCumulative50)
+                      .Where(x => x?.Value.Value == windSpeedCumulative50Value.Value)
+                      .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<WindSpeedValue>() { Value = windSpeedCumulative50Value, IsStart = windSpeedCumulative50Value.StartDateTime == currentDateTime };
+                        forecastTimeLine.WindSpeedCumulative50 = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = windSpeedCumulative50Value.EndDateTime == currentDateTime;
+                }
+
+                // wind speed - cumulative64
+                WindSpeedValue windSpeedCumulative64Value = windSpeedIncremental64Values?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (windSpeedCumulative64Value != null)
+                {
+                    ForecastValue<WindSpeedValue> forecastElement = forecast.Timelines
+                      .Where(x => x.DateTime <= currentDateTime)
+                      .Select(x => x.WindSpeedCumulative64)
+                      .Where(x => x?.Value.Value == windSpeedCumulative64Value.Value)
+                      .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<WindSpeedValue>() { Value = windSpeedCumulative64Value, IsStart = windSpeedCumulative64Value.StartDateTime == currentDateTime };
+                        forecastTimeLine.WindSpeedCumulative64 = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = windSpeedCumulative64Value.EndDateTime == currentDateTime;
+                }
+
+                // wind direction
+                WindDirectionValue windDirectionValue = windDirectionValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
+                if (windDirectionValue != null)
+                {
+                    forecastTimeLine.WindDirection = new ForecastValue<double>() { Value = windDirectionValue.Value, IsStart = true, IsEnd = true };
+                }
+
+                // cloud amount
+                CloudAmountValue cloudAmountValue = cloudAmountValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
+                if (cloudAmountValue != null)
+                {
+                    forecastTimeLine.CloudAmount = new ForecastValue<double>() { Value = cloudAmountValue.Value, IsStart = true, IsEnd = true };
+                }
+
+                // humidity - releative 
+                HumidityValue humidityReleaveValue = humidityReleativeValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
+                if (humidityReleaveValue != null)
+                {
+                    forecastTimeLine.HumidityReleative = new ForecastValue<double>() { Value = humidityReleaveValue.Value, IsStart = true, IsEnd = true };
+                }
+
+                // humidity - maximum releative 
+                HumidityValue humidityMaximumReleaveValue = humidityMaximumReleativeValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (humidityMaximumReleaveValue != null)
+                {
+                    ForecastValue<HumidityValue> forecastElement = forecast.Timelines
+                     .Where(x => x.DateTime <= currentDateTime)
+                     .Select(x => x.HumidityMaximumReleative)
+                     .Where(x => x?.Value.Value == humidityMaximumReleaveValue.Value)
+                     .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<HumidityValue>() { Value = humidityMaximumReleaveValue, IsStart = humidityMaximumReleaveValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.HumidityMaximumReleative = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = humidityMaximumReleaveValue.EndDateTime == currentDateTime;
+                }
+
+                // humidity - minimum releative 
+                HumidityValue humidityMinimumReleaveValue = humidityMinimumReleativeValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (humidityMinimumReleaveValue != null)
+                {
+                    ForecastValue<HumidityValue> forecastElement = forecast.Timelines
+                     .Where(x => x.DateTime <= currentDateTime)
+                     .Select(x => x.HumidityMinimumReleative)
+                     .Where(x => x?.Value.Value == humidityMinimumReleaveValue.Value)
+                     .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<HumidityValue>() { Value = humidityMinimumReleaveValue, IsStart = humidityMinimumReleaveValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.HumidityMinimumReleative = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = humidityMinimumReleaveValue.EndDateTime == currentDateTime;
+                }
+
+                // convective hazard - outlook
+                ConvectiveHazardValue convectiveHazardOutlookValue = convectiveHazardOutlookValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (convectiveHazardOutlookValue != null)
+                {
+                    ForecastValue<ConvectiveHazardValue> forecastElement = forecast.Timelines
+                    .Where(x => x.DateTime <= currentDateTime)
+                    .Select(x => x.ConvectiveHazardOutlook)
+                    .Where(x => x?.Value.Value == convectiveHazardOutlookValue.Value)
+                    .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ConvectiveHazardValue>() { Value = convectiveHazardOutlookValue, IsStart = convectiveHazardOutlookValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ConvectiveHazardOutlook = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = convectiveHazardOutlookValue.EndDateTime == currentDateTime;
+                }
+
+                // convective hazard - tornadoes
+                ConvectiveHazardValue convectiveHazardTornadoesValue = convectiveHazardTornadoesValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (convectiveHazardTornadoesValue != null)
+                {
+                    ForecastValue<ConvectiveHazardValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ConvectiveHazardTornadoes)
+                        .Where(x => x?.Value.Value == convectiveHazardTornadoesValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ConvectiveHazardValue>() { Value = convectiveHazardTornadoesValue, IsStart = convectiveHazardTornadoesValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ConvectiveHazardTornadoes = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = convectiveHazardTornadoesValue.EndDateTime == currentDateTime;
+                }
+
+                // convective hazard - hail
+                ConvectiveHazardValue convectiveHazardHailValue = convectiveHazardHailValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (convectiveHazardHailValue != null)
+                {
+                    ForecastValue<ConvectiveHazardValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ConvectiveHazardHail)
+                        .Where(x => x?.Value.Value == convectiveHazardHailValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ConvectiveHazardValue>() { Value = convectiveHazardHailValue, IsStart = convectiveHazardHailValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ConvectiveHazardHail = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = convectiveHazardHailValue.EndDateTime == currentDateTime;
+                }
+
+                // convective hazard - damaging thunderstorm winds
+                ConvectiveHazardValue convectiveHazardDamagingThunderstormWindsValue = convectiveHazardDamagingThunderstormWindsValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (convectiveHazardDamagingThunderstormWindsValue != null)
+                {
+                    ForecastValue<ConvectiveHazardValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ConvectiveHazardDamagingThunderstormWinds)
+                        .Where(x => x?.Value.Value == convectiveHazardDamagingThunderstormWindsValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ConvectiveHazardValue>() { Value = convectiveHazardDamagingThunderstormWindsValue, IsStart = convectiveHazardDamagingThunderstormWindsValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ConvectiveHazardDamagingThunderstormWinds = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = convectiveHazardDamagingThunderstormWindsValue.EndDateTime == currentDateTime;
+                }
+
+                // convective hazard - extreme tornadoes
+                ConvectiveHazardValue convectiveHazardExtremeTornadoesValue = convectiveHazardTornadoesValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (convectiveHazardExtremeTornadoesValue != null)
+                {
+                    ForecastValue<ConvectiveHazardValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ConvectiveHazardExtremeTornadoes)
+                        .Where(x => x?.Value.Value == convectiveHazardExtremeTornadoesValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ConvectiveHazardValue>() { Value = convectiveHazardExtremeTornadoesValue, IsStart = convectiveHazardExtremeTornadoesValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ConvectiveHazardExtremeTornadoes = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = convectiveHazardExtremeTornadoesValue.EndDateTime == currentDateTime;
+                }
+
+                // convective hazard - extreme hail
+                ConvectiveHazardValue convectiveHazardExtremeHailValue = convectiveHazardExtremeHailValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (convectiveHazardExtremeHailValue != null)
+                {
+                    ForecastValue<ConvectiveHazardValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ConvectiveHazardExtremeHail)
+                        .Where(x => x?.Value.Value == convectiveHazardExtremeHailValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ConvectiveHazardValue>() { Value = convectiveHazardExtremeHailValue, IsStart = convectiveHazardExtremeHailValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ConvectiveHazardExtremeHail = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = convectiveHazardExtremeHailValue.EndDateTime == currentDateTime;
+                }
+
+                // convective hazard - extreme thunderstorm winds
+                ConvectiveHazardValue convectiveHazardExtremeThunderstormWindsValue = convectiveHazardExtremeThunderstormWindsValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (convectiveHazardExtremeThunderstormWindsValue != null)
+                {
+                    ForecastValue<ConvectiveHazardValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ConvectiveHazardExtremeThunderstormWinds)
+                        .Where(x => x?.Value.Value == convectiveHazardExtremeThunderstormWindsValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ConvectiveHazardValue>() { Value = convectiveHazardExtremeThunderstormWindsValue, IsStart = convectiveHazardExtremeThunderstormWindsValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ConvectiveHazardExtremeThunderstormWinds = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = convectiveHazardExtremeThunderstormWindsValue.EndDateTime == currentDateTime;
+                }
+
+                // convective hazard - severe thunderstorm
+                ConvectiveHazardValue convectiveHazardSevereThunderstormsValue = convectiveHazardSevereThunderstormValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (convectiveHazardSevereThunderstormsValue != null)
+                {
+                    ForecastValue<ConvectiveHazardValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ConvectiveHazardSevereThunderstorms)
+                        .Where(x => x?.Value.Value == convectiveHazardSevereThunderstormsValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ConvectiveHazardValue>() { Value = convectiveHazardSevereThunderstormsValue, IsStart = convectiveHazardSevereThunderstormsValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ConvectiveHazardSevereThunderstorms = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = convectiveHazardSevereThunderstormsValue.EndDateTime == currentDateTime;
+                }
+
+                // convective hazard - extreme severe thunderstorm (is this redundant?)
+                ConvectiveHazardValue convectiveHazardExtremeSevereThunderstormsValue = convectiveHazardExtremeSevereThunderstormsValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (convectiveHazardExtremeSevereThunderstormsValue != null)
+                {
+                    ForecastValue<ConvectiveHazardValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ConvectiveHazardExtremeSevereThunderstorms)
+                        .Where(x => x?.Value.Value == convectiveHazardExtremeSevereThunderstormsValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ConvectiveHazardValue>() { Value = convectiveHazardExtremeSevereThunderstormsValue, IsStart = convectiveHazardExtremeSevereThunderstormsValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ConvectiveHazardExtremeSevereThunderstorms = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = convectiveHazardExtremeSevereThunderstormsValue.EndDateTime == currentDateTime;
+                }
+
+                // fire weather - risk from wind and relative humidity
+                FireWeatherValue fireWeatherRiskFromWindAndRelativeHumidityValue = fireWeatherRiskFromWindAndRelativeHumidityValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (fireWeatherRiskFromWindAndRelativeHumidityValue != null)
+                {
+                    ForecastValue<FireWeatherValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.FireWeatherRiskFromWindAndRelativeHumidity)
+                        .Where(x => x?.Value.Value == fireWeatherRiskFromWindAndRelativeHumidityValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<FireWeatherValue>() { Value = fireWeatherRiskFromWindAndRelativeHumidityValue, IsStart = fireWeatherRiskFromWindAndRelativeHumidityValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.FireWeatherRiskFromWindAndRelativeHumidity = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = fireWeatherRiskFromWindAndRelativeHumidityValue.EndDateTime == currentDateTime;
+                }
+
+                // fire weather - risk from dry thunderstorms
+                FireWeatherValue fireWeatherRiskFromDryThunderstormsValue = fireWeatherRiskFromDryThunderstormValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (fireWeatherRiskFromDryThunderstormsValue != null)
+                {
+                    ForecastValue<FireWeatherValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.FireWeatherRiskFromDryThunderstorms)
+                        .Where(x => x?.Value.Value == fireWeatherRiskFromDryThunderstormsValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<FireWeatherValue>() { Value = fireWeatherRiskFromDryThunderstormsValue, IsStart = fireWeatherRiskFromDryThunderstormsValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.FireWeatherRiskFromDryThunderstorms = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = fireWeatherRiskFromDryThunderstormsValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - weekly temperature above normal
+                ClimateAnomalyValue climateAnomalyWeeklyTemperatureAboveNormalValue = climateAnomalyWeeklyTemperatureAboveNormalValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalyWeeklyTemperatureAboveNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ClimateAnomalyWeeklyTemperatureAboveNormal)
+                        .Where(x => x?.Value.Value == climateAnomalyWeeklyTemperatureAboveNormalValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalyWeeklyTemperatureAboveNormalValue, IsStart = climateAnomalyWeeklyTemperatureAboveNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalyWeeklyTemperatureAboveNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalyWeeklyTemperatureAboveNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - weekly temperature below normal
+                ClimateAnomalyValue climateAnomalyWeeklyTemperatureBelowNormalValue = climateAnomalyWeeklyTemperatureBelowNormalValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalyWeeklyTemperatureBelowNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ClimateAnomalyWeeklyTemperatureBelowNormal)
+                        .Where(x => x?.Value.Value == climateAnomalyWeeklyTemperatureBelowNormalValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalyWeeklyTemperatureBelowNormalValue, IsStart = climateAnomalyWeeklyTemperatureBelowNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalyWeeklyTemperatureBelowNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalyWeeklyTemperatureBelowNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - monthly temperature above normal
+                ClimateAnomalyValue climateAnomalyMonthlyTemperatureAboveNormalValue = climateAnomalyMonthlyTemperatureAboveNormalValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalyMonthlyTemperatureAboveNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ClimateAnomalyMonthlyTemperatureAboveNormal)
+                        .Where(x => x?.Value.Value == climateAnomalyMonthlyTemperatureAboveNormalValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalyMonthlyTemperatureAboveNormalValue, IsStart = climateAnomalyMonthlyTemperatureAboveNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalyMonthlyTemperatureAboveNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalyMonthlyTemperatureAboveNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - monthly temperature below normal
+                ClimateAnomalyValue climateAnomalyMonthlyTemperatureBelowNormalValue = climateAnomalyMonthlyTemperatureBelowNormalValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalyMonthlyTemperatureBelowNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                        .Where(x => x.DateTime <= currentDateTime)
+                        .Select(x => x.ClimateAnomalyMonthlyTemperatureBelowNormal)
+                        .Where(x => x?.Value.Value == climateAnomalyMonthlyTemperatureBelowNormalValue.Value)
+                        .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalyMonthlyTemperatureBelowNormalValue, IsStart = climateAnomalyMonthlyTemperatureBelowNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalyMonthlyTemperatureBelowNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalyMonthlyTemperatureBelowNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - seasonal temperature above normal
+                ClimateAnomalyValue climateAnomalySeasonalTemperatureAboveNormalValue = climateAnomalySeasonalTemperatureAboveNormalValues?.FirstOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalyMonthlyTemperatureAboveNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.ClimateAnomalySeasonalTemperatureAboveNormal)
+                       .Where(x => x?.Value.Value == climateAnomalyMonthlyTemperatureAboveNormalValue.Value)
+                       .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalyMonthlyTemperatureAboveNormalValue, IsStart = climateAnomalyMonthlyTemperatureAboveNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalySeasonalTemperatureAboveNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalyMonthlyTemperatureAboveNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - seasonal temperature below normal
+                ClimateAnomalyValue climateAnomalySeasonalTemperatureBelowNormalValue = climateAnomalySeasonalTemperatureBelowNormalValues?.FirstOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalySeasonalTemperatureBelowNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.ClimateAnomalySeasonalTemperatureBelowNormal)
+                       .Where(x => x?.Value.Value == climateAnomalySeasonalTemperatureBelowNormalValue.Value)
+                       .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalySeasonalTemperatureBelowNormalValue, IsStart = climateAnomalySeasonalTemperatureBelowNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalySeasonalTemperatureBelowNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalySeasonalTemperatureBelowNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - weekly precipitation above normal
+                ClimateAnomalyValue climateAnomalyWeeklyPrecipitationAboveNormalValue = climateAnomalyWeeklyPrecipitationAboveNormalValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalyWeeklyPrecipitationAboveNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.ClimateAnomalyWeeklyPrecipitationAboveNormal)
+                       .Where(x => x?.Value.Value == climateAnomalyWeeklyPrecipitationAboveNormalValue.Value)
+                       .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalyWeeklyPrecipitationAboveNormalValue, IsStart = climateAnomalyWeeklyPrecipitationAboveNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalyWeeklyPrecipitationAboveNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalyWeeklyPrecipitationAboveNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - weekly precipitation below normal
+                ClimateAnomalyValue climateAnomalyWeeklyPrecipitationBelowNormalValue = climateAnomalyWeeklyPrecipitationBelowNormalValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalyWeeklyPrecipitationBelowNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.ClimateAnomalyWeeklyPrecipitationBelowNormal)
+                       .Where(x => x?.Value.Value == climateAnomalyWeeklyPrecipitationBelowNormalValue.Value)
+                       .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalyWeeklyPrecipitationBelowNormalValue, IsStart = climateAnomalyWeeklyPrecipitationBelowNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalyWeeklyPrecipitationBelowNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalyWeeklyPrecipitationBelowNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - monthly precipitation above normal
+                ClimateAnomalyValue climateAnomalyMonthlyPrecipitationAboveNormalValue = climateAnomalyMonthlyPrecipitationAboveNormalValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalyMonthlyPrecipitationAboveNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.ClimateAnomalyMonthlyPrecipitationAboveNormal)
+                       .Where(x => x?.Value.Value == climateAnomalyMonthlyPrecipitationAboveNormalValue.Value)
+                       .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalyMonthlyPrecipitationAboveNormalValue, IsStart = climateAnomalyMonthlyPrecipitationAboveNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalyMonthlyPrecipitationAboveNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalyMonthlyPrecipitationAboveNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - monthly precipitation below normal
+                ClimateAnomalyValue climateAnomalyMonthlyPrecipitationBelowNormalValue = climateAnomalyMonthlyPrecipitationBelowNormalValues?.SingleOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalyMonthlyPrecipitationBelowNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.ClimateAnomalyMonthlyPrecipitationBelowNormal)
+                       .Where(x => x?.Value.Value == climateAnomalyMonthlyPrecipitationBelowNormalValue.Value)
+                       .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalyMonthlyPrecipitationBelowNormalValue, IsStart = climateAnomalyMonthlyPrecipitationBelowNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalyMonthlyPrecipitationBelowNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalyMonthlyPrecipitationBelowNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - seasonal precipitation above normal
+                ClimateAnomalyValue climateAnomalySeasonalPrecipitationAboveNormalValue = climateAnomalySeasonalPrecipitationAboveNormalValues?.FirstOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalySeasonalPrecipitationAboveNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.ClimateAnomalySeasonalPrecipitationAboveNormal)
+                       .Where(x => x?.Value.Value == climateAnomalySeasonalPrecipitationAboveNormalValue.Value)
+                       .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalySeasonalPrecipitationAboveNormalValue, IsStart = climateAnomalySeasonalPrecipitationAboveNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalySeasonalPrecipitationAboveNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalySeasonalPrecipitationAboveNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // climate anomaly - seasonal precipitation below normal
+                ClimateAnomalyValue climateAnomalySeasonalPrecipitationBelowNormalValue = climateAnomalySeasonalPrecipitationBelowNormalValues?.FirstOrDefault(x => x.StartDateTime <= currentDateTime & x.EndDateTime > currentDateTime);
+                if (climateAnomalySeasonalPrecipitationBelowNormalValue != null)
+                {
+                    ForecastValue<ClimateAnomalyValue> forecastElement = forecast.Timelines
+                       .Where(x => x.DateTime <= currentDateTime)
+                       .Select(x => x.ClimateAnomalySeasonalPrecipitationBelowNormal)
+                       .Where(x => x?.Value.Value == climateAnomalySeasonalPrecipitationBelowNormalValue.Value)
+                       .SingleOrDefault();
+
+                    if (forecastElement == null)
+                    {
+                        forecastElement = new ForecastValue<ClimateAnomalyValue>() { Value = climateAnomalySeasonalPrecipitationBelowNormalValue, IsStart = climateAnomalySeasonalPrecipitationBelowNormalValue.StartDateTime == currentDateTime };
+                        forecastTimeLine.ClimateAnomalySeasonalPrecipitationBelowNormal = forecastElement;
+                    }
+
+                    forecastElement.IsEnd = climateAnomalySeasonalPrecipitationBelowNormalValue.EndDateTime == currentDateTime;
+                }
+
+                // weather conditions
+                WeatherConditions weatherCondition = weatherConditions?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
+                if (weatherCondition != null && weatherCondition.Values.Count > 0)
+                {
+                    forecastTimeLine.WeatherConditions = new ForecastValue<WeatherConditions>() { Value = weatherCondition, IsStart = true, IsEnd = true };
+                }
+
+                // condition icons
+                ConditionIconValue conditionIconValue = conditionIconValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
+                if (conditionIconValue != null)
+                {
+                    forecastTimeLine.ConditionIcons = new ForecastValue<Uri>() { Value = conditionIconValue.Value, IsStart = true, IsEnd = true };
+                }
+
+                // if there is data; add it to the list.
+                if (!forecastTimeLine.IsEmpty) forecast.Timelines.Add(forecastTimeLine);
+
+                currentDateTime = currentDateTime.AddMinutes(30);
             }
 
-            return convectiveHazard;
+            return forecast;
 
         }
 
-
-        #endregion
     }
 
 

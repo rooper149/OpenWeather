@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OpenWeather.Models.Noaa
+﻿namespace OpenWeather.Noaa.Models
 {
     public abstract class ForecastElementBase
     {

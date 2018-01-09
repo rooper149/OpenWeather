@@ -1,5 +1,6 @@
 ﻿using gov.weather.graphical;
-using OpenWeather.Models;
+using OpenWeather.Noaa.Base;
+using OpenWeather.Noaa.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -65,9 +66,11 @@ namespace OpenWeather.Noaa
             return null;
         }
 
-        public async Task<string> GetForecastByStationAsync(Station station, DateTime startDateTime, DateTime endDateTime, RequestType requestType, Units unit, WeatherParameters weatherParameters)
+        public async Task<Forecast> GetForecastByStationAsync(Station station, DateTime startDateTime, DateTime endDateTime, RequestType requestType, Units unit, WeatherParameters weatherParameters)
         {
             ndfdXMLPortTypeClient client = CreateClient();
+            Forecast forecast = null;
+
             try
             {
                 productType requestedProduct = requestType == RequestType.Glance ? productType.glance : productType.timeseries;
@@ -78,16 +81,14 @@ namespace OpenWeather.Noaa
                 if (String.IsNullOrWhiteSpace(result)) return null;
 
                 ForecastParser forecastParser = new ForecastParser();
-                forecastParser.ParseForecastResult(result);
-
-                return string.Empty;
+                forecast = forecastParser.ParseForecastResult(result);
             }
             catch (Exception ex)
             {
                 var tt = ex;
-                throw;
             }
 
+            return forecast;
         }
     }
 }
