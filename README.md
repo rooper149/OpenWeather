@@ -1,6 +1,6 @@
 # OpenWeather .NET Standard Fork #
 [![nuget](https://img.shields.io/nuget/v/OpenWeather.Core.svg)](https://www.nuget.org/packages/OpenWeather.Core/)
-[![myget](https://www.myget.org/BuildSource/Badge/dynamensions?identifier=8dc4acf3-b3f3-4315-811e-2058ec66d901)
+![myget](https://www.myget.org/BuildSource/Badge/dynamensions?identifier=8dc4acf3-b3f3-4315-811e-2058ec66d901)
 
 This is a fork for the original open weather - using NOAA data.
 - Utilized Task Parallel Library (TPL) 
