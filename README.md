@@ -8,10 +8,9 @@ This is a fork for the original open weather - using NOAA data.
 
 **Features**
 - Current Observations
+- Forcast
+- Forcast History 
 
-**Future Plans**
- - Forcast - *soon*
- - Forcast History
-
+#Original Project
 ## OpenWeather
 Open Weather is a simple library designed to take a coordinate (latitude and longitude) and find the closest weather station to that coordinate while also getting the current METAR and TAF weather data and parsing it.
