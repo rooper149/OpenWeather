@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace OpenWeather
 {
-    public static class Extensions
+    internal static class Extensions
     {
         public static double ToDouble(this string s, double defaultValue = 0)
         {
@@ -17,11 +17,12 @@ namespace OpenWeather
         public static DateTime ToDateTime(this string s, DateTime? defaultValue = null)
         {
             if (!defaultValue.HasValue) defaultValue = new DateTime();
-            DateTime value = XmlConvert.ToDateTime(s, XmlDateTimeSerializationMode.Local);
+            DateTime? value = (DateTime?)Convert.ToDateTime(s);
+            //DateTime value = XmlConvert.ToDateTime(s, XmlDateTimeSerializationMode.Local);
             if (value == null)
                 return defaultValue.Value;
             else
-                return value;
+                return value.Value;
         }
 
         public static TimeSpan FromXmlDurationToTimeSpan(this string s, TimeSpan? defaultValue = null)

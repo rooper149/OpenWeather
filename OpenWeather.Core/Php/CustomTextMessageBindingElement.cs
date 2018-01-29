@@ -4,7 +4,7 @@ using System.Xml;
 
 namespace OpenWeather.Php
 {
-    public class CustomTextMessageBindingElement : MessageEncodingBindingElement//, IWsdlExportExtension 
+    internal class CustomTextMessageBindingElement : MessageEncodingBindingElement//, IWsdlExportExtension 
     {
         private MessageVersion msgVersion;
         private string mediaType;

@@ -8,7 +8,7 @@ using System.IO;
 
 namespace OpenWeather.Php
 {
-    public class CustomTextMessageEncoder : MessageEncoder
+    internal class CustomTextMessageEncoder : MessageEncoder
     {
         private CustomTextMessageEncoderFactory factory;
         private XmlWriterSettings writerSettings;

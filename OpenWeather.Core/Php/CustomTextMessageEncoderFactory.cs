@@ -2,7 +2,7 @@
 
 namespace OpenWeather.Php
 {
-    public class CustomTextMessageEncoderFactory : MessageEncoderFactory
+    internal class CustomTextMessageEncoderFactory : MessageEncoderFactory
     {
         private MessageEncoder encoder;
         private MessageVersion version;
