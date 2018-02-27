@@ -92,19 +92,19 @@ namespace OpenWeather.Noaa
                     Int32.TryParse(synopValue, out synop);
                     station.SYNOP = synop;
 
-                    double latitude = 0, longitude = 0, elevation = 0;
+                    decimal latitude = 0, longitude = 0, elevation = 0;
                     latitudeValue = latitudeValue.Replace(" ", ".");
                     longitudeValue = longitudeValue.Replace(" ", ".");
 
-                    double.TryParse(latitudeValue.Substring(0, latitudeValue.Length - 1), out latitude);
+                    decimal.TryParse(latitudeValue.Substring(0, latitudeValue.Length - 1), out latitude);
                     if (latitudeValue.EndsWith("S")) latitude *= -1;
                     station.Latitude = latitude;
 
-                    double.TryParse(longitudeValue.Substring(0, longitudeValue.Length - 1), out longitude);
+                    decimal.TryParse(longitudeValue.Substring(0, longitudeValue.Length - 1), out longitude);
                     if (longitudeValue.EndsWith("W")) longitude *= -1;
                     station.Longitude = longitude;
 
-                    double.TryParse(elevationValue, out elevation);
+                    decimal.TryParse(elevationValue, out elevation);
                     station.Elevation = elevation;
 
                     int priority = 0;
