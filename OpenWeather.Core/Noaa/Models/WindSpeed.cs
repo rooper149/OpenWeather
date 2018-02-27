@@ -17,6 +17,6 @@ namespace OpenWeather.Noaa.Models
 
     public class WindSpeedValue : ForecastValueBase
     {
-        public double Value { get; set; }
+        public decimal? Value { get; set; }
     }
 }

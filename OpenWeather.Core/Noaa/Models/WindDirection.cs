@@ -16,6 +16,6 @@ namespace OpenWeather.Noaa.Models
 
     public class WindDirectionValue : ForecastValueBase
     {
-        public double Value { get; set; }
+        public decimal? Value { get; set; }
     }
 }

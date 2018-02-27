@@ -81,7 +81,7 @@ namespace OpenWeather.Noaa
                 if (maximumTemperatureValue != null)
                 {
 
-                    ForecastValue<double> forecastElement = forecast.Timelines
+                    ForecastValue<decimal?> forecastElement = forecast.Timelines
                         .Where(x => x.DateTime <= currentDateTime)
                         .Select(x => x.TemperatureMaximum)
                         .Where(x => x?.Value == maximumTemperatureValue.Value)
@@ -89,7 +89,7 @@ namespace OpenWeather.Noaa
 
                     if (forecastElement == null)
                     {
-                        forecastElement = new ForecastValue<double>() { Value = maximumTemperatureValue.Value, IsStart = maximumTemperatureValue.StartDateTime == currentDateTime };
+                        forecastElement = new ForecastValue<decimal?>() { Value = maximumTemperatureValue.Value, IsStart = maximumTemperatureValue.StartDateTime == currentDateTime };
                         forecastTimeLine.TemperatureMaximum = forecastElement;
                     }
 
@@ -101,7 +101,7 @@ namespace OpenWeather.Noaa
                 if (minimumTemperatureValue != null)
                 {
 
-                    ForecastValue<double> forecastElement = forecast.Timelines
+                    ForecastValue<decimal?> forecastElement = forecast.Timelines
                         .Where(x => x.DateTime <= currentDateTime)
                         .Select(x => x.TemperatureMinimum)
                         .Where(x => x?.Value == minimumTemperatureValue.Value)
@@ -109,7 +109,7 @@ namespace OpenWeather.Noaa
 
                     if (forecastElement == null)
                     {
-                        forecastElement = new ForecastValue<double>() { Value = minimumTemperatureValue.Value, IsStart = minimumTemperatureValue.StartDateTime == currentDateTime };
+                        forecastElement = new ForecastValue<decimal?>() { Value = minimumTemperatureValue.Value, IsStart = minimumTemperatureValue.StartDateTime == currentDateTime };
                         forecastTimeLine.TemperatureMinimum = forecastElement;
                     }
 
@@ -120,7 +120,7 @@ namespace OpenWeather.Noaa
                 TemperatureValue hourlyTemperatureValue = hourlyTemperatureValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
                 if (hourlyTemperatureValue != null)
                 {
-                    forecastTimeLine.TemperatureHourly = new ForecastValue<double>()
+                    forecastTimeLine.TemperatureHourly = new ForecastValue<decimal?>()
                     {
                         Value = hourlyTemperatureValue.Value,
                         IsStart = true,
@@ -132,7 +132,7 @@ namespace OpenWeather.Noaa
                 TemperatureValue dewpointTemperatureValue = dewpointTemperatureValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
                 if (dewpointTemperatureValue != null)
                 {
-                    forecastTimeLine.TemperatureDewpoint = new ForecastValue<double>()
+                    forecastTimeLine.TemperatureDewpoint = new ForecastValue<decimal?>()
                     {
                         Value = dewpointTemperatureValue.Value,
                         IsStart = true,
@@ -144,7 +144,7 @@ namespace OpenWeather.Noaa
                 TemperatureValue apparentTemperatureValue = apparentTemperatureValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
                 if (apparentTemperatureValue != null)
                 {
-                    forecastTimeLine.TemperatureApparent = new ForecastValue<double>() { Value = apparentTemperatureValue.Value, IsStart = true, IsEnd = true };
+                    forecastTimeLine.TemperatureApparent = new ForecastValue<decimal?>() { Value = apparentTemperatureValue.Value, IsStart = true, IsEnd = true };
                 }
 
                 // ice precipitation
@@ -246,7 +246,7 @@ namespace OpenWeather.Noaa
                 WindSpeedValue windSpeedSustainedValue = windSpeedSustainedValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
                 if (windSpeedSustainedValue != null)
                 {
-                    forecastTimeLine.WindSpeedSustained = new ForecastValue<double>() { Value = windSpeedSustainedValue.Value, IsStart = true, IsEnd = true };
+                    forecastTimeLine.WindSpeedSustained = new ForecastValue<decimal?>() { Value = windSpeedSustainedValue.Value, IsStart = true, IsEnd = true };
                 }
 
                 // wind speed - incremental34
@@ -367,21 +367,21 @@ namespace OpenWeather.Noaa
                 WindDirectionValue windDirectionValue = windDirectionValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
                 if (windDirectionValue != null)
                 {
-                    forecastTimeLine.WindDirection = new ForecastValue<double>() { Value = windDirectionValue.Value, IsStart = true, IsEnd = true };
+                    forecastTimeLine.WindDirection = new ForecastValue<decimal?>() { Value = windDirectionValue.Value, IsStart = true, IsEnd = true };
                 }
 
                 // cloud amount
                 CloudAmountValue cloudAmountValue = cloudAmountValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
                 if (cloudAmountValue != null)
                 {
-                    forecastTimeLine.CloudAmount = new ForecastValue<double>() { Value = cloudAmountValue.Value, IsStart = true, IsEnd = true };
+                    forecastTimeLine.CloudAmount = new ForecastValue<decimal?>() { Value = cloudAmountValue.Value, IsStart = true, IsEnd = true };
                 }
 
                 // humidity - releative 
                 HumidityValue humidityReleaveValue = humidityReleativeValues?.SingleOrDefault(x => x.StartDateTime == currentDateTime);
                 if (humidityReleaveValue != null)
                 {
-                    forecastTimeLine.HumidityReleative = new ForecastValue<double>() { Value = humidityReleaveValue.Value, IsStart = true, IsEnd = true };
+                    forecastTimeLine.HumidityReleative = new ForecastValue<decimal?>() { Value = humidityReleaveValue.Value, IsStart = true, IsEnd = true };
                 }
 
                 // humidity - maximum releative 

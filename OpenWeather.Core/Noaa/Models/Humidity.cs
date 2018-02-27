@@ -15,6 +15,6 @@ namespace OpenWeather.Noaa.Models
 
     public class HumidityValue : ForecastValueBase
     {
-        public double Value { get; set; }
+        public decimal? Value { get; set; }
     }
 }

@@ -30,26 +30,26 @@ namespace OpenWeather.Noaa.Models
     public class ForecastTimeLine
     {
         public DateTime DateTime { get; set; }
-        public ForecastValue<double> TemperatureMaximum { get; set; }
-        public ForecastValue<double> TemperatureMinimum { get; set; }
-        public ForecastValue<double> TemperatureHourly { get; set; }
-        public ForecastValue<double> TemperatureDewpoint { get; set; }
-        public ForecastValue<double> TemperatureApparent { get; set; }
+        public ForecastValue<decimal?> TemperatureMaximum { get; set; }
+        public ForecastValue<decimal?> TemperatureMinimum { get; set; }
+        public ForecastValue<decimal?> TemperatureHourly { get; set; }
+        public ForecastValue<decimal?> TemperatureDewpoint { get; set; }
+        public ForecastValue<decimal?> TemperatureApparent { get; set; }
         public ForecastValue<PrecipitationValue> PrecipitationIce { get; set; }
         public ForecastValue<PrecipitationValue> PrecipitationSnow { get; set; }
         public ForecastValue<PrecipitationValue> PrecipitationLiquid { get; set; }
         public ForecastValue<ProbabilityOfPrecipitationValue> ProbabilityOfPrecipitation { get; set; }
         public ForecastValue<WindSpeedValue> WindSpeedGust { get; set; }
-        public ForecastValue<double> WindSpeedSustained { get; set; }
+        public ForecastValue<decimal?> WindSpeedSustained { get; set; }
         public ForecastValue<WindSpeedValue> WindSpeedIncremental34 { get; set; }
         public ForecastValue<WindSpeedValue> WindSpeedIncremental50 { get; set; }
         public ForecastValue<WindSpeedValue> WindSpeedIncremental64 { get; set; }
         public ForecastValue<WindSpeedValue> WindSpeedCumulative34 { get; set; }
         public ForecastValue<WindSpeedValue> WindSpeedCumulative50 { get; set; }
         public ForecastValue<WindSpeedValue> WindSpeedCumulative64 { get; set; }
-        public ForecastValue<double> WindDirection { get; set; }
-        public ForecastValue<double> CloudAmount { get; set; }
-        public ForecastValue<double> HumidityReleative { get; set; }
+        public ForecastValue<decimal?> WindDirection { get; set; }
+        public ForecastValue<decimal?> CloudAmount { get; set; }
+        public ForecastValue<decimal?> HumidityReleative { get; set; }
         public ForecastValue<HumidityValue> HumidityMaximumReleative { get; set; }
         public ForecastValue<HumidityValue> HumidityMinimumReleative { get; set; }
         public ForecastValue<ConvectiveHazardValue> ConvectiveHazardOutlook { get; set; }

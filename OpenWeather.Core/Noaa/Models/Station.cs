@@ -47,9 +47,9 @@ namespace OpenWeather.Noaa.Models
         public string ICAO { get; set; }
         public string IATA { get; set; }
         public int SYNOP { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public double Elevation { get; set; }
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
+        public decimal? Elevation { get; set; }
         public bool IsMetar { get; set; }
         public bool IsNexRad { get; set; }
 
