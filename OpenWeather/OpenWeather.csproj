@@ -20,6 +20,7 @@
     <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <IntermediateOutputPath>C:\Users\rthiele\AppData\Local\Temp\vs3A3E.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Linux|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +29,7 @@
     <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <IntermediateOutputPath>C:\Users\rthiele\AppData\Local\Temp\vs3A3E.tmp\Linux\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Android|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -39,12 +41,14 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Optimize>true</Optimize>
     <DocumentationFile>bin\Android\OpenWeather.XML</DocumentationFile>
+    <IntermediateOutputPath>C:\Users\rthiele\AppData\Local\Temp\vs3A3E.tmp\Android\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Windows|AnyCPU' ">
     <OutputPath>bin\Windows\</OutputPath>
     <Optimize>true</Optimize>
     <DefineConstants>WINDOWS</DefineConstants>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <IntermediateOutputPath>C:\Users\rthiele\AppData\Local\Temp\vs3A3E.tmp\Windows\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android">
