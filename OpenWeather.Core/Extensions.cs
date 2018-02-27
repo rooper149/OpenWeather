@@ -6,16 +6,6 @@ namespace OpenWeather
 {
     internal static class Extensions
     {
-        public static double? ToDouble(this string s, double? defaultValue = null)
-        {
-            double value = 0;
-            if (!String.IsNullOrWhiteSpace(s) && Double.TryParse(s, out value))
-                return value;
-            else
-                return defaultValue;
-        }
-
-
         public static decimal? ToDecimal(this string s, decimal? defaultValue = null)
         {
             decimal value = 0;

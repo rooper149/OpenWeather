@@ -213,7 +213,7 @@ namespace OpenWeather.Noaa.Models
                 {
                     StartDateTime = timeLayout.times[i].startDateTime,
                     EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                    Value = valueElementsList[i].ValueIfExists().ToDecimal()
                 });
             }
 
@@ -246,7 +246,7 @@ namespace OpenWeather.Noaa.Models
                 {
                     StartDateTime = timeLayout.times[i].startDateTime,
                     EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                    Value = valueElementsList[i].ValueIfExists().ToDecimal()
                 });
             }
 
@@ -279,7 +279,7 @@ namespace OpenWeather.Noaa.Models
                 {
                     StartDateTime = timeLayout.times[i].startDateTime,
                     EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                    Value = valueElementsList[i].ValueIfExists().ToDecimal()
                 });
             }
 
@@ -312,7 +312,7 @@ namespace OpenWeather.Noaa.Models
                 {
                     StartDateTime = timeLayout.times[i].startDateTime,
                     EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                    Value = valueElementsList[i].ValueIfExists().ToDecimal()
                 });
             }
 
@@ -343,7 +343,7 @@ namespace OpenWeather.Noaa.Models
                 {
                     StartDateTime = timeLayout.times[i].startDateTime,
                     EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                    Value = valueElementsList[i].ValueIfExists().ToDecimal()
                 });
             }
 
@@ -380,7 +380,7 @@ namespace OpenWeather.Noaa.Models
                 {
                     StartDateTime = timeLayout.times[i].startDateTime,
                     EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                    Value = valueElementsList[i].ValueIfExists().ToDecimal()
                 });
             }
 
@@ -412,7 +412,7 @@ namespace OpenWeather.Noaa.Models
                 {
                     StartDateTime = timeLayout.times[i].startDateTime,
                     EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                    Value = valueElementsList[i].ValueIfExists().ToDecimal()
                 });
             }
 
@@ -443,7 +443,7 @@ namespace OpenWeather.Noaa.Models
                 {
                     StartDateTime = timeLayout.times[i].startDateTime,
                     EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                    Value = valueElementsList[i].ValueIfExists().ToDecimal()
                 });
             }
 
@@ -476,7 +476,7 @@ namespace OpenWeather.Noaa.Models
                 {
                     StartDateTime = timeLayout.times[i].startDateTime,
                     EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                    Value = valueElementsList[i].ValueIfExists().ToDecimal()
                 });
             }
 
@@ -546,7 +546,7 @@ namespace OpenWeather.Noaa.Models
                 {
                     StartDateTime = timeLayout.times[i].startDateTime,
                     EndDateTime = timeLayout.times[i].endDateTime,
-                    Value = valueElementsList[i].ValueIfExists().ToDouble()
+                    Value = valueElementsList[i].ValueIfExists().ToDecimal()
                 });
             }
 
