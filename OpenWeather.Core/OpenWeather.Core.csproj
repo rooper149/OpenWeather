@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="GeoCoordinate" Version="2.0.1" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.0" />
     <PackageReference Include="System.ServiceModel.Http" Version="4.4.0" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.0" />
@@ -27,6 +28,13 @@
 
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Windows.Foundation.UniversalApiContract">
+      <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.16299.0\Windows.Foundation.UniversalApiContract\5.0.0.0\Windows.Foundation.UniversalApiContract.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
   </ItemGroup>
 
 </Project>

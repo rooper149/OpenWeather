@@ -3,7 +3,9 @@ using OpenWeather.Noaa.Base;
 using OpenWeather.Noaa.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -65,6 +67,48 @@ namespace OpenWeather.Noaa
 
             return null;
         }
+
+
+        #region Alerts
+
+        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByCountyCode(string countyCode)
+        {
+            Uri requestUri = new Uri($"https://alerts.weather.gov/cap/wwaatmget.php?x={countyCode}&y=1");
+            string response = null;
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("Dynamensions_Weather", "1.0")));
+                response = await httpClient.GetStringAsync(requestUri);
+            }
+
+            return await GetWeatherAlertByXmlString(response);
+        }
+
+        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByXmlFile(string xmlFilePath)
+        {
+            string xmlString = null;
+            if (String.IsNullOrWhiteSpace(xmlFilePath)) return null;
+
+            using (FileStream fs = new FileStream(xmlFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                using (StreamReader reader = new StreamReader(fs))
+                {
+                    xmlString = await reader.ReadToEndAsync();
+                }
+            }
+
+            return await GetWeatherAlertByXmlString(xmlString);
+        }
+
+        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByXmlString(string xmlString)
+        {
+            if (String.IsNullOrWhiteSpace(xmlString)) return null;
+            AlertParser parser = new AlertParser();
+            
+            return await Task.FromResult(parser.ParseAlerts(xmlString));
+        }
+
+        #endregion Alerts
 
         public async Task<Forecast> GetForecastByStationAsync(Station station, DateTime startDateTime, DateTime endDateTime, RequestType requestType, Units unit, WeatherParameters weatherParameters)
         {

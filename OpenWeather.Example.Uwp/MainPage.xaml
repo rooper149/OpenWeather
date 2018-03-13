@@ -16,5 +16,8 @@
         <PivotItem Header="Forecasts">
             <local:Forecasts />
         </PivotItem>
+        <PivotItem Header="Alerts">
+            <local:Alerts />
+        </PivotItem>
     </Pivot>
 </Page>
