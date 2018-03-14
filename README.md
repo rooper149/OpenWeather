@@ -11,6 +11,9 @@ This is a fork for the original open weather - using NOAA data.
 ### Stations ###
 Downloaded from NOAA; It contains all available stations worldwide. It is recommmended you cache this file to avoid recursive calls to the NOAA web site.
 
+### Alerts ###
+Alerts can be queried from the NOAA feeds.
+
 ### Current Observations ###
 Downloaded through the NOAA xml service. This module compiles a url to download information in xml format. This module then compiles the information into easy-to-use CLR object.
 
