@@ -4,8 +4,10 @@ using OpenWeather.Noaa.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -71,6 +73,49 @@ namespace OpenWeather.Noaa
 
         #region Alerts
 
+        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByCountyAndState(string county, string stateAbbreviation)
+        {
+            if (String.IsNullOrWhiteSpace(county)) return null;
+            if (String.IsNullOrWhiteSpace(stateAbbreviation)) return null;
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string resourceName = "OpenWeather.Resources.NOAA_County_CountyCode.csv";
+            List<Models.Resources.NOAA_County_CountyCode> list = new List<Models.Resources.NOAA_County_CountyCode>();
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    while (reader.Peek() != -1)
+                    {
+                        string line = await reader.ReadLineAsync();
+                        if (String.IsNullOrWhiteSpace(line)) continue;
+
+                        Models.Resources.NOAA_County_CountyCode nOAA_County_CountyCode = new Models.Resources.NOAA_County_CountyCode();
+                        string[] values = line.Split(',');
+
+                        if (values.Length > 0) nOAA_County_CountyCode.CountyCode = values[0];
+                        if (values.Length > 1) nOAA_County_CountyCode.County = values[1];
+                        if (values.Length > 2) nOAA_County_CountyCode.State_ShortName = values[2];
+                        if (values.Length > 3) nOAA_County_CountyCode.State_LongName = values[3];
+
+                        list.Add(nOAA_County_CountyCode);
+                    }
+                }
+            }
+
+            if (list.Count == 0) return null;
+
+            string countyCode = list
+                .Where(c => c.County?.ToLower() == county.ToLower())
+                .Where(c => c.State_ShortName?.ToLower() == stateAbbreviation.ToLower())
+                .Select(c => c.CountyCode).SingleOrDefault();
+
+            if (String.IsNullOrWhiteSpace(countyCode)) return null;
+
+            return await GetWeatherAlertByCountyCode(countyCode);
+        }
+
         public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByCountyCode(string countyCode)
         {
             Uri requestUri = new Uri($"https://alerts.weather.gov/cap/wwaatmget.php?x={countyCode}&y=1");
@@ -104,7 +149,7 @@ namespace OpenWeather.Noaa
         {
             if (String.IsNullOrWhiteSpace(xmlString)) return null;
             AlertParser parser = new AlertParser();
-            
+
             return await Task.FromResult(parser.ParseAlerts(xmlString));
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,15 +17,22 @@ namespace OpenWeather.Example.Uwp
 
         private async void GetAlertsButton_Click(object sender, RoutedEventArgs e)
         {
+            if (String.IsNullOrWhiteSpace(CountyTextBox.Text) | String.IsNullOrWhiteSpace(StateTextBox.Text))
+                StatusTextBlock.Text = "Be sure the county and state are both filled before you get alerts.";
+
+            StatusTextBlock.Text = $"Grabbing alerts for {CountyTextBox.Text}, {StateTextBox.Text}.";
+
             AlertResultListBox.Items.Clear();
 
             Noaa.Api api = new Noaa.Api();
-            IEnumerable<Noaa.Models.Alerts.WeatherAlert> alerts = await api.GetWeatherAlertByXmlFile("wwaatmget.xml");
+            IEnumerable<Noaa.Models.Alerts.WeatherAlert> alerts = await api.GetWeatherAlertByCountyAndState("Elkhart", "IN");
+            //IEnumerable<Noaa.Models.Alerts.WeatherAlert> alerts = await api.GetWeatherAlertByXmlFile("wwaatmget.xml");
             //IEnumerable<Noaa.Models.Alerts.WeatherAlert> alerts = await api.GetWeatherAlertByCountyCode(CountyCodeTextBox.Text);
 
-            if (alerts == null || alerts.Count() == 0) return;
-
-            alerts.ToList().ForEach(i => AlertResultListBox.Items.Add(i));
+            if (alerts == null || alerts.Count() == 0)
+                StatusTextBlock.Text = $"There are no alerts for {CountyTextBox.Text}, {StateTextBox.Text}.";
+            else
+                alerts.ToList().ForEach(i => AlertResultListBox.Items.Add(i));
 
         }
     }

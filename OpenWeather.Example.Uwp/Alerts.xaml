@@ -10,32 +10,34 @@
     d:DesignWidth="600">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center">County:</TextBlock>
+            <TextBox x:Name="CountyTextBox" Text="Allen" Width="120"/>
+            <TextBlock VerticalAlignment="Center" Margin="20,0,0,0">State:</TextBlock>
+            <TextBox x:Name="StateTextBox" Text="IN" Width="120"/>
+            <Button x:Name="GetAlertsButton" Click="GetAlertsButton_Click">Get Alerts</Button>
+        </StackPanel>
 
-        <TextBlock VerticalAlignment="Center">County Code:</TextBlock>
-        <TextBox x:Name="CountyCodeTextBox" Grid.Column="1" Text="INC039" />
-        <Button x:Name="GetAlertsButton" Grid.Column="2" Click="GetAlertsButton_Click">Get Alerts</Button>
-        <ListBox x:Name="AlertResultListBox" Grid.Row="1" Grid.ColumnSpan="3">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock><Run Text="ID: "/><Run Text="{Binding Id}"/></TextBlock>
-                        <TextBlock><Run Text="Updated: "/><Run Text="{Binding Updated}"/></TextBlock>
-                        <TextBlock><Run Text="Expires: "/><Run Text="{Binding Expires}"/></TextBlock>
-                        <TextBlock><Run Text="Status: "/><Run Text="{Binding Status}"/></TextBlock>
-                        <TextBlock><Run Text="Title: "/><Run Text="{Binding Title}"/></TextBlock>
-                        <TextBlock><Run Text="Summary: "/><Run Text="{Binding Summary}"/></TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <StackPanel Grid.Row="1">
+            <ListBox x:Name="AlertResultListBox">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock><Run Text="ID: "/><Run Text="{Binding Id}"/></TextBlock>
+                            <TextBlock><Run Text="Updated: "/><Run Text="{Binding Updated}"/></TextBlock>
+                            <TextBlock><Run Text="Expires: "/><Run Text="{Binding Expires}"/></TextBlock>
+                            <TextBlock><Run Text="Status: "/><Run Text="{Binding Status}"/></TextBlock>
+                            <TextBlock><Run Text="Title: "/><Run Text="{Binding Title}"/></TextBlock>
+                            <TextBlock><Run Text="Summary: "/><Run Text="{Binding Summary}"/></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBlock x:Name="StatusTextBlock" />
+        </StackPanel>
     </Grid>
 </UserControl>
