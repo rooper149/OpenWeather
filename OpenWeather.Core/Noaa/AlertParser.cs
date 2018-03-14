@@ -46,7 +46,7 @@ namespace OpenWeather.Noaa
 
                 weatherAlert.Area.Description = element.Element(capNamespace + "areaDesc").ValueIfExists();
                 weatherAlert.Area.Polygon = ParsePolygon(element.Element(capNamespace + "polygon"));
-               
+
 
                 AlertStatusValues statusValue;
                 Enum.TryParse(element.Element(capNamespace + "status").ValueIfExists(), out statusValue);
@@ -73,6 +73,9 @@ namespace OpenWeather.Noaa
                 {
                     weatherAlert.Sender = authorElement.Element(atomNameSpace + "name").ValueIfExists();
                 }
+
+                if (!String.IsNullOrWhiteSpace(weatherAlert.Title) && weatherAlert.Title.Contains("There are no active watches, warnings or advisories")) continue;
+                if (!String.IsNullOrWhiteSpace(weatherAlert.Summary) && weatherAlert.Summary.Contains("There are no active watches, warnings or advisories")) continue;
 
                 weatherAlerts.Add(weatherAlert);
             }
