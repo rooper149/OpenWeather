@@ -70,10 +70,53 @@ namespace OpenWeather.Noaa
             return null;
         }
 
-
         #region Alerts
 
-        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByCountyAndState(string county, string stateAbbreviation)
+        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByZipCodeAsync(string zipCode)
+        {
+            if (String.IsNullOrWhiteSpace(zipCode)) return null;
+
+            string resourceName = "OpenWeather.Resources.ZipCodes_City_State_County.csv";
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            List<Common.Models.ZipCodesCityStateCounty> list = new List<Common.Models.ZipCodesCityStateCounty>();
+
+            // read all the zip codes
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    while (reader.Peek() != -1)
+                    {
+                        string line = await reader.ReadLineAsync();
+                        if (String.IsNullOrWhiteSpace(line)) continue;
+                        if (line == "Zip Code,Place Name,State Abbreviation,County") continue;
+
+                        Common.Models.ZipCodesCityStateCounty zipCodesCityStateCounty = new Common.Models.ZipCodesCityStateCounty();
+                        string[] values = line.Split(',');
+
+                        if (values.Length > 0) zipCodesCityStateCounty.ZipCode = values[0];
+                        if (values.Length > 1) zipCodesCityStateCounty.City = values[1];
+                        if (values.Length > 2) zipCodesCityStateCounty.State = values[2];
+                        if (values.Length > 3) zipCodesCityStateCounty.County = values[3];
+
+                        list.Add(zipCodesCityStateCounty);
+                    }
+                }
+            }
+
+            if (list.Count == 0) return null;
+
+            Common.Models.ZipCodesCityStateCounty? model = list
+                .Where(c => c.ZipCode?.ToLower() == zipCode)
+                .SingleOrDefault();
+
+            if (!model.HasValue)
+                return null;
+            else
+                return await GetWeatherAlertByCountyAndStateAsync(model.Value.County, model.Value.State);
+        }
+
+        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByCountyAndStateAsync(string county, string stateAbbreviation)
         {
             if (String.IsNullOrWhiteSpace(county)) return null;
             if (String.IsNullOrWhiteSpace(stateAbbreviation)) return null;
@@ -113,10 +156,10 @@ namespace OpenWeather.Noaa
 
             if (String.IsNullOrWhiteSpace(countyCode)) return null;
 
-            return await GetWeatherAlertByCountyCode(countyCode);
+            return await GetWeatherAlertByCountyCodeAsync(countyCode);
         }
 
-        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByCountyCode(string countyCode)
+        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByCountyCodeAsync(string countyCode)
         {
             Uri requestUri = new Uri($"https://alerts.weather.gov/cap/wwaatmget.php?x={countyCode}&y=1");
             string response = null;
@@ -126,10 +169,10 @@ namespace OpenWeather.Noaa
                 response = await httpClient.GetStringAsync(requestUri);
             }
 
-            return await GetWeatherAlertByXmlString(response);
+            return await GetWeatherAlertByXmlStringAsync(response);
         }
 
-        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByXmlFile(string xmlFilePath)
+        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByXmlFileAsync(string xmlFilePath)
         {
             string xmlString = null;
             if (String.IsNullOrWhiteSpace(xmlFilePath)) return null;
@@ -142,10 +185,10 @@ namespace OpenWeather.Noaa
                 }
             }
 
-            return await GetWeatherAlertByXmlString(xmlString);
+            return await GetWeatherAlertByXmlStringAsync(xmlString);
         }
 
-        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByXmlString(string xmlString)
+        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByXmlStringAsync(string xmlString)
         {
             if (String.IsNullOrWhiteSpace(xmlString)) return null;
             AlertParser parser = new AlertParser();

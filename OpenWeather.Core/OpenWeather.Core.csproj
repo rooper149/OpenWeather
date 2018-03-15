@@ -19,10 +19,12 @@
 
   <ItemGroup>
     <None Remove="Resources\NOAA_County_CountyCode.csv" />
+    <None Remove="Resources\ZipCodes_City_State_County.csv" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\NOAA_County_CountyCode.csv" />
+    <EmbeddedResource Include="Resources\ZipCodes_City_State_County.csv" />
   </ItemGroup>
 
   <ItemGroup>
