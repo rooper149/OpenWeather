@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace OpenWeather.Noaa.Models.Alerts
+namespace OpenWeather.Noaa.Alerts
 {
     public enum WeatherAlertCategories
     {
@@ -127,7 +127,6 @@ namespace OpenWeather.Noaa.Models.Alerts
         /// </summary>
         Unknown
     }
-
 
     public class WeatherAlertInformation
     {

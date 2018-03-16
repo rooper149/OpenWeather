@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace OpenWeather.Noaa.Models.Alerts
+namespace OpenWeather.Noaa.Alerts
 {
     public class WeatherAlertArea
     {

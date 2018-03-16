@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace OpenWeather.Noaa.Models.Alerts
+namespace OpenWeather.Noaa.Alerts
 {
 
     #region Code Values

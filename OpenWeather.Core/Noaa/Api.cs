@@ -72,43 +72,32 @@ namespace OpenWeather.Noaa
 
         #region Alerts
 
+      
+        /// <summary>
+        /// Starts an operation where the alerts will be checked in a given interval. 
+        /// </summary>
+        /// <returns></returns>
+        public async Task GetAlertsByIntervalAsync(TimeSpan interval)
+        {
+            if (alertTimer != null)
+            {
+                alertTimer.Stop();
+                alertTimer = null;
+            }
+
+            alertTimer = new System.Timers.Timer(interval.TotalMilliseconds);
+
+        }
+
         public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByZipCodeAsync(string zipCode)
         {
             if (String.IsNullOrWhiteSpace(zipCode)) return null;
+            Common.ZipCodesCityStateCounty? model = null;
 
-            string resourceName = "OpenWeather.Resources.ZipCodes_City_State_County.csv";
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            List<Common.Models.ZipCodesCityStateCounty> list = new List<Common.Models.ZipCodesCityStateCounty>();
-
-            // read all the zip codes
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (Common.ZipCodesCityStateCountiesHelper helper = new Common.ZipCodesCityStateCountiesHelper())
             {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    while (reader.Peek() != -1)
-                    {
-                        string line = await reader.ReadLineAsync();
-                        if (String.IsNullOrWhiteSpace(line)) continue;
-                        if (line == "Zip Code,Place Name,State Abbreviation,County") continue;
-
-                        Common.Models.ZipCodesCityStateCounty zipCodesCityStateCounty = new Common.Models.ZipCodesCityStateCounty();
-                        string[] values = line.Split(',');
-
-                        if (values.Length > 0) zipCodesCityStateCounty.ZipCode = values[0];
-                        if (values.Length > 1) zipCodesCityStateCounty.City = values[1];
-                        if (values.Length > 2) zipCodesCityStateCounty.State = values[2];
-                        if (values.Length > 3) zipCodesCityStateCounty.County = values[3];
-
-                        list.Add(zipCodesCityStateCounty);
-                    }
-                }
+                model = await helper.GetZipCodesCityStateCountyByZipCode(zipCode);
             }
-
-            if (list.Count == 0) return null;
-
-            Common.Models.ZipCodesCityStateCounty? model = list
-                .Where(c => c.ZipCode?.ToLower() == zipCode)
-                .SingleOrDefault();
 
             if (!model.HasValue)
                 return null;
