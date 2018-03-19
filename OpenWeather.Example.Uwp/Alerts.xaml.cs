@@ -11,7 +11,7 @@ namespace OpenWeather.Example.Uwp
 {
     public sealed partial class Alerts : UserControl
     {
-        private Noaa.Alerts.Api _api = null;
+        private Noaa.Api _api = null;
 
         public Alerts()
         {
@@ -26,7 +26,7 @@ namespace OpenWeather.Example.Uwp
                 _api = null;
             }
 
-            _api = new Noaa.Alerts.Api();
+            _api = new Noaa.Api();
 
             switch (ConditionsPiviot.SelectedIndex)
             {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenWeather.Noaa.Models
+namespace OpenWeather.Noaa.CurrentObservartions
 {
     public class CurrentObservation
     {

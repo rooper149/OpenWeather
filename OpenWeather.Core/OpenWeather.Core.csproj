@@ -47,8 +47,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Noaa\Models\Alerts\" />
-  </ItemGroup>
-
 </Project>
