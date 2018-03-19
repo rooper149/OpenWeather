@@ -3,11 +3,7 @@ using OpenWeather.Noaa.Base;
 using OpenWeather.Noaa.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -72,118 +68,8 @@ namespace OpenWeather.Noaa
 
         #region Alerts
 
-      
-        /// <summary>
-        /// Starts an operation where the alerts will be checked in a given interval. 
-        /// </summary>
-        /// <returns></returns>
-        public async Task GetAlertsByIntervalAsync(TimeSpan interval)
-        {
-            if (alertTimer != null)
-            {
-                alertTimer.Stop();
-                alertTimer = null;
-            }
 
-            alertTimer = new System.Timers.Timer(interval.TotalMilliseconds);
 
-        }
-
-        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByZipCodeAsync(string zipCode)
-        {
-            if (String.IsNullOrWhiteSpace(zipCode)) return null;
-            Common.ZipCodesCityStateCounty? model = null;
-
-            using (Common.ZipCodesCityStateCountiesHelper helper = new Common.ZipCodesCityStateCountiesHelper())
-            {
-                model = await helper.GetZipCodesCityStateCountyByZipCode(zipCode);
-            }
-
-            if (!model.HasValue)
-                return null;
-            else
-                return await GetWeatherAlertByCountyAndStateAsync(model.Value.County, model.Value.State);
-        }
-
-        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByCountyAndStateAsync(string county, string stateAbbreviation)
-        {
-            if (String.IsNullOrWhiteSpace(county)) return null;
-            if (String.IsNullOrWhiteSpace(stateAbbreviation)) return null;
-
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string resourceName = "OpenWeather.Resources.NOAA_County_CountyCode.csv";
-            List<Models.Resources.NOAA_County_CountyCode> list = new List<Models.Resources.NOAA_County_CountyCode>();
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    while (reader.Peek() != -1)
-                    {
-                        string line = await reader.ReadLineAsync();
-                        if (String.IsNullOrWhiteSpace(line)) continue;
-
-                        Models.Resources.NOAA_County_CountyCode nOAA_County_CountyCode = new Models.Resources.NOAA_County_CountyCode();
-                        string[] values = line.Split(',');
-
-                        if (values.Length > 0) nOAA_County_CountyCode.CountyCode = values[0];
-                        if (values.Length > 1) nOAA_County_CountyCode.County = values[1];
-                        if (values.Length > 2) nOAA_County_CountyCode.State_ShortName = values[2];
-                        if (values.Length > 3) nOAA_County_CountyCode.State_LongName = values[3];
-
-                        list.Add(nOAA_County_CountyCode);
-                    }
-                }
-            }
-
-            if (list.Count == 0) return null;
-
-            string countyCode = list
-                .Where(c => c.County?.ToLower() == county.ToLower())
-                .Where(c => c.State_ShortName?.ToLower() == stateAbbreviation.ToLower())
-                .Select(c => c.CountyCode).SingleOrDefault();
-
-            if (String.IsNullOrWhiteSpace(countyCode)) return null;
-
-            return await GetWeatherAlertByCountyCodeAsync(countyCode);
-        }
-
-        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByCountyCodeAsync(string countyCode)
-        {
-            Uri requestUri = new Uri($"https://alerts.weather.gov/cap/wwaatmget.php?x={countyCode}&y=1");
-            string response = null;
-            using (HttpClient httpClient = new HttpClient())
-            {
-                httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("Dynamensions_Weather", "1.0")));
-                response = await httpClient.GetStringAsync(requestUri);
-            }
-
-            return await GetWeatherAlertByXmlStringAsync(response);
-        }
-
-        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByXmlFileAsync(string xmlFilePath)
-        {
-            string xmlString = null;
-            if (String.IsNullOrWhiteSpace(xmlFilePath)) return null;
-
-            using (FileStream fs = new FileStream(xmlFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                using (StreamReader reader = new StreamReader(fs))
-                {
-                    xmlString = await reader.ReadToEndAsync();
-                }
-            }
-
-            return await GetWeatherAlertByXmlStringAsync(xmlString);
-        }
-
-        public async Task<IEnumerable<Models.Alerts.WeatherAlert>> GetWeatherAlertByXmlStringAsync(string xmlString)
-        {
-            if (String.IsNullOrWhiteSpace(xmlString)) return null;
-            AlertParser parser = new AlertParser();
-
-            return await Task.FromResult(parser.ParseAlerts(xmlString));
-        }
 
         #endregion Alerts
 

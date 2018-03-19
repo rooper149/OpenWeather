@@ -8,28 +8,49 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="600">
-
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" BorderBrush="Black" BorderThickness="1">
-                <TextBlock VerticalAlignment="Center">County:</TextBlock>
-                <TextBox x:Name="CountyTextBox" Text="Allen" Width="120"/>
-                <TextBlock VerticalAlignment="Center" Margin="20,0,0,0">State:</TextBlock>
-                <TextBox x:Name="StateTextBox" Text="IN" Width="120"/>
-            </StackPanel>
-            <TextBlock Margin="20,0" VerticalAlignment="Center">or</TextBlock>
-            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" BorderBrush="Black" BorderThickness="1">
-                <TextBlock VerticalAlignment="Center">Zip Code:</TextBlock>
-                <TextBox x:Name="ZipCodeTextBox" Text="46528" Width="120"/>
-            </StackPanel>
-            <Button x:Name="GetAlertsButton" Click="GetAlertsButton_Click">Get Alerts</Button>
-        </StackPanel>
+        <Pivot Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" x:Name="ConditionsPiviot">
+            <PivotItem Header="Query By County/State">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center">County:</TextBlock>
+                    <TextBox x:Name="CountyTextBox" Text="Allen" Width="120"/>
+                    <TextBlock VerticalAlignment="Center" Margin="20,0,0,0">State:</TextBlock>
+                    <TextBox x:Name="StateTextBox" Text="IN" Width="120"/>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem Header="Query By ZipCode">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center">Zip Code:</TextBlock>
+                    <TextBox x:Name="ZipCode_ZipCodeTextBox" Text="46528" Width="120"/>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem Header="Query By Zip Code with Interval">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center">ZIp Code:</TextBlock>
+                    <TextBox x:Name="ZipCodeInterval_ZipCodeTextBox" Text="46528" Width="120"/>
+                    <TextBlock VerticalAlignment="Center">Seconds:</TextBlock>
+                    <TextBox x:Name="ZipCodeInterval_SecondsTextBox" Text="60" Width="120"/>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem Header="Query By Zip Code Automatically">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center">Zip Code:</TextBlock>
+                    <TextBox x:Name="ZipCodeAutomatically_ZipCodeTextBox" Text="46528" Width="120"/>
+                </StackPanel>
+            </PivotItem>
+        </Pivot>
 
-        <StackPanel Grid.Row="1">
+        <Button Grid.Column="1" VerticalAlignment="Top" Margin="5,10" x:Name="GetAlertsButton" Click="GetAlertsButton_Click">Get Alerts</Button>
+
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="10" BorderBrush="Black" BorderThickness="1" Padding="10">
             <ListBox x:Name="AlertResultListBox">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -47,4 +68,5 @@
             <TextBlock x:Name="StatusTextBlock" />
         </StackPanel>
     </Grid>
+
 </UserControl>
