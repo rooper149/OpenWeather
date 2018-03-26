@@ -51,6 +51,8 @@ namespace OpenWeather.Example.Uwp
 
         private void FillAlerts(IEnumerable<Noaa.Alerts.WeatherAlert> alerts, string area)
         {
+            AlertResultListBox.Items.Clear();
+
             if (alerts == null || alerts.Count() == 0)
                 StatusTextBlock.Text = $"There are no alerts for {area}.{Environment.NewLine}Last Query: {DateTime.Now}";
             else
