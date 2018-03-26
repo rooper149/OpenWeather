@@ -1,0 +1,62 @@
+﻿<UserControl
+    x:Class="OpenWeather.Example.Uwp.CurrentObservations"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OpenWeather.Example.Uwp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="StationInformationTextBlock" FontSize="20" Grid.ColumnSpan="3" />
+
+        <Image x:Name="WeatherIconImage" Grid.Row="1" Height="100" Width="100" />
+        
+        <!-- Titles -->
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <TextBlock FontWeight="Bold" TextAlignment="Right">Last Updated:</TextBlock>
+            <TextBlock FontWeight="Bold" TextAlignment="Right">Weather:</TextBlock>
+            <TextBlock FontWeight="Bold" TextAlignment="Right">Temperature:</TextBlock>
+            <TextBlock FontWeight="Bold" TextAlignment="Right">Dewpoint:</TextBlock>
+            <TextBlock FontWeight="Bold" TextAlignment="Right">Releative Humidity:</TextBlock>
+            <TextBlock FontWeight="Bold" TextAlignment="Right">Wind:</TextBlock>
+            <TextBlock FontWeight="Bold" TextAlignment="Right">Wind Chill:</TextBlock>
+            <TextBlock FontWeight="Bold" TextAlignment="Right">Visibility:</TextBlock>
+            <TextBlock FontWeight="Bold" TextAlignment="Right">MSL Pressure:</TextBlock>
+            <TextBlock FontWeight="Bold" TextAlignment="Right">Altimeter:</TextBlock>
+        </StackPanel>
+
+        <!-- Values -->
+        <StackPanel Grid.Column="2" Grid.Row="1">
+            <TextBlock x:Name="LastUpdatedTextBlock">[Last Updated]</TextBlock>
+            <TextBlock x:Name="WeatherTextBlock">[Weather]</TextBlock>
+            <TextBlock x:Name="TemperatureTextBlock">[Temperature]</TextBlock>
+            <TextBlock x:Name="DewpointTextBlock">[Dewpoint]</TextBlock>
+            <TextBlock x:Name="RelativeHumidityTextBlock">[RelativeHumudity]</TextBlock>
+            <TextBlock x:Name="WindTextBlock">[Wind]</TextBlock>
+            <TextBlock x:Name="WindChillTextBlock">[Wind Chill]</TextBlock>
+            <TextBlock x:Name="VisibilityTextBlock">[Visibility]</TextBlock>
+            <TextBlock x:Name="MSLPressureTextBlock">[MSL Pressure]</TextBlock>
+            <TextBlock x:Name="AltimeterTextBlock">[Altimeter]</TextBlock>
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
+            <TextBlock x:Name="StatusTextBlock" HorizontalAlignment="Center">[Status]</TextBlock>
+            <Button x:Name="GetCurrentObservationsButton" HorizontalAlignment="Center" Click="GetCurrentObservationsButton_Click">Get Current Observations</Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

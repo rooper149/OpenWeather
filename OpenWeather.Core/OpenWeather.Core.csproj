@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>OpenWeather</RootNamespace>
+    <PackageProjectUrl>https://github.com/RyanThiele/OpenWeather</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/RyanThiele/OpenWeather</RepositoryUrl>
+    <RepositoryType>Utility</RepositoryType>
+    <PackageTags>weather, noaa</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>1.0.0</Version>
+    <Authors>Ryan S. Thiele</Authors>
+    <Company>Dynamensions</Company>
+    <Product>OpenWeather</Product>
+    <Description>A componenet ported from OpenWeather - Made for .NET core.
+
+Functionallity:
+- Current Observations
+- Forecasts (depends on the stations. Some can go up to 3 weeks in the future and a week in the past)
+- Alerts</Description>
+    <Copyright>©Dynamensions</Copyright>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageIconUrl>https://avatars1.githubusercontent.com/u/14931472?s=400&amp;u=848b186e544070a3c06d6aeffc69fbc4620c1fef&amp;v=4</PackageIconUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Api\**" />
+    <EmbeddedResource Remove="Api\**" />
+    <None Remove="Api\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\NOAA_County_CountyCode.csv" />
+    <None Remove="Resources\ZipCodes_City_State_County.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\NOAA_County_CountyCode.csv" />
+    <EmbeddedResource Include="Resources\ZipCodes_City_State_County.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GeoCoordinate" Version="2.0.1" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="4.4.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="4.4.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Windows.Foundation.UniversalApiContract">
+      <HintPath>C:\Program Files (x86)\Windows Kits\10\References\10.0.16299.0\Windows.Foundation.UniversalApiContract\5.0.0.0\Windows.Foundation.UniversalApiContract.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Alerts\" />
+  </ItemGroup>
+
+</Project>

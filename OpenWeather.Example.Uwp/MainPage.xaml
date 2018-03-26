@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="OpenWeather.Example.Uwp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OpenWeather.Example.Uwp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Pivot Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <PivotItem Header="Stations">
+            <local:Stations />
+        </PivotItem>
+        <PivotItem Header="Current Observations">
+            <local:CurrentObservations />
+        </PivotItem>
+        <PivotItem Header="Forecasts">
+            <local:Forecasts />
+        </PivotItem>
+        <PivotItem Header="Alerts">
+            <local:Alerts />
+        </PivotItem>
+    </Pivot>
+</Page>
