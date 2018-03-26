@@ -2,13 +2,36 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace OpenWeather.Noaa.Alerts
 {
     internal class AlertParser : IDisposable
     {
+
         internal IEnumerable<WeatherAlert> ParseAlerts(string result)
         {
+            Feed feed = null;
+
+            XmlRootAttribute xRoot = new XmlRootAttribute();
+            xRoot.ElementName = "feed";
+            xRoot.Namespace = "http://www.w3.org/2005/Atom";
+            
+            XmlSerializer serializer = new XmlSerializer(typeof(Feed), xRoot);
+
+            using (StringReader reader = new StringReader(result))
+            {
+                feed = (Feed)serializer.Deserialize(reader);
+            }
+
+            var tt = feed;
+
+
+
+            return null;
+
+
             List<WeatherAlert> weatherAlerts = new List<WeatherAlert>();
 
             XDocument document = XDocument.Parse(result);

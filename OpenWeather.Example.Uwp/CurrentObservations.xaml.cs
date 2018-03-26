@@ -1,4 +1,5 @@
-﻿using OpenWeather.Noaa.Models;
+﻿using OpenWeather.Noaa.CurrentObservartions;
+using OpenWeather.Noaa.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

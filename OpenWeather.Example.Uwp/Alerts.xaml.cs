@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,12 +33,15 @@ namespace OpenWeather.Example.Uwp
             switch (ConditionsPiviot.SelectedIndex)
             {
                 case 0:
-                    await QueryByCountyStateAsync();
+                    await QueryByFile();
                     break;
                 case 1:
-                    await QueryByZipCodeAsync();
+                    await QueryByCountyStateAsync();
                     break;
                 case 2:
+                    await QueryByZipCodeAsync();
+                    break;
+                case 3:
                     await QueryByZipCodeIntervalAsync();
                     break;
                 default:
@@ -54,6 +59,22 @@ namespace OpenWeather.Example.Uwp
                 alerts.ToList().ForEach(i => AlertResultListBox.Items.Add(i));
             }
         }
+
+        private async Task QueryByFile()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string resourceName = "OpenWeather.Example.Uwp.wwaatmget.xml";
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string content = await reader.ReadToEndAsync();
+                    FillAlerts(await _api.GetWeatherAlertByXmlStringAsync(content), "Internal File");
+                }
+            }
+        }
+
 
         private async Task QueryByCountyStateAsync()
         {

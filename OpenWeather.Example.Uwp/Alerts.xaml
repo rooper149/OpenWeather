@@ -18,6 +18,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Pivot Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" x:Name="ConditionsPiviot">
+            <PivotItem Header="Query By File"/>
             <PivotItem Header="Query By County/State">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center">County:</TextBlock>

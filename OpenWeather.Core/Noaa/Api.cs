@@ -156,6 +156,7 @@ namespace OpenWeather.Noaa
             while (weatherAlerts == null)
             {
                 weatherAlerts = await GetWeatherAlertByZipCodeAsync(zipCode);
+                await Task.Delay(seconds * 1000);
             }
 
             return weatherAlerts;
@@ -242,14 +243,19 @@ namespace OpenWeather.Noaa
         public async Task<IEnumerable<WeatherAlert>> GetWeatherAlertByCountyCodeAsync(string countyCode)
         {
             Uri requestUri = new Uri($"https://alerts.weather.gov/cap/wwaatmget.php?x={countyCode}&y=1");
-            string response = null;
+            HttpResponseMessage response = null;
             using (HttpClient httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("Dynamensions_Weather", "1.0")));
-                response = await httpClient.GetStringAsync(requestUri);
+                response = await httpClient.GetAsync(requestUri);
             }
 
-            return await GetWeatherAlertByXmlStringAsync(response);
+            if (response == null) return null;
+
+            if (response.IsSuccessStatusCode)
+                return await GetWeatherAlertByXmlStringAsync(await response.Content.ReadAsStringAsync());
+            else
+                throw new Exception(response.StatusCode.ToString());
         }
 
 
