@@ -1,8 +1,9 @@
+# OUT OF DATE
 # Author Ryan Cooper, OpenWeather Project
 # Updated: 08.06.16 (dd.mm.yy)
 #
 # METAR and ICAO compliant weather station list.
-# Adapted from Greg Thompson's list https://www.aviationweather.gov/static/adds/metars/stations.txt
+# Adapted from Greg Thompson's list https://www.aviationweather.gov/docs/metar/stations.txt
 #
 # ICAO, Latitude (aprox), Longitude (aprox), Elevation (meters), Country code, Region code, Name/City
 #
