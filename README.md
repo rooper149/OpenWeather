@@ -1,4 +1,4 @@
-# This project has been quiet for a while, but I am working on udpates now.
+### This project has been quiet for a while, but I am working on udpates now.
 
 ### Welcome to OpenWeather.
 Open Weather is a simple library designed to take a coordinate (latitude and longitude) and find the closest weather station to that coordinate while also getting the current METAR or TAF weather data and parsing it. It has other features like being cross-platform (Windows/Linux/Android), searching by ICAO codes, automatic update intervals, and unit conversions. We hope to be adding more and more features as development continues!
