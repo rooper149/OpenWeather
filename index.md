@@ -7,7 +7,7 @@ You can get a pre-compiled nuget package by searching OpenWeather in NuGet or go
 
 ### The Data
 All the METAR data is obtained through [NOAA](http://www.noaa.gov/) and the [Aviation Weather Center](https://www.aviationweather.gov/).
-Our weather station lookup list is adapted from Greg Thompson's station list which can be found [here](https://www.aviationweather.gov/static/adds/metars/stations.txt). The adaptation of this list is stored as a project resource in OpenWeather, and can be found [here](https://raw.githubusercontent.com/rooper149/OpenWeather/master/OpenWeather/Resources/official_stations.csv).
+Our weather station lookup list is adapted from Greg Thompson's station list which can be found [here](https://www.aviationweather.gov/docs/metar/stations.txt).
 
 ### Getting Started
 It's easy to search for a station and start getting weather data!
@@ -31,13 +31,5 @@ It's easy to search for a station and start getting weather data!
             Console.ReadLine();
         }
 
-### API
-We have a web api that uses OpenWeather to demonstrated some of it's current capabilities, you can check it out [here](http://api.openweather.pw).
-Source for the api's ASP.NET project can be found at [OpenICAO](https://github.com/rooper149/OpenICAO) on GitHub.
-
 ### License
-OpenWeather is under the BSD 3-Clause License, so feel _free_ to enjoy and use OpenWeather however you please.
-
-### Support or Contact
-Ryan Cooper (@rooper149)
-[cooper.ryan@centaurisoftware.co](mailto:cooper.ryan@centaurisoftware.co)
+OpenWeather is under the BSD 3-Clause License.
