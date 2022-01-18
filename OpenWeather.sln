@@ -3,15 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenWeather", "OpenWeather\OpenWeather.csproj", "{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{D411F6AE-7143-4834-8B6D-10BD58371B34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StationListBuilder", "Tools\StationListBuilder\StationListBuilder.csproj", "{9AEEB1C6-ACBA-4396-A306-1F6FE1AF5FA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StationListBuilder", "Tools\StationListBuilder\StationListBuilder.csproj", "{9AEEB1C6-ACBA-4396-A306-1F6FE1AF5FA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenWeather.Data", "OpenWeather.Data\OpenWeather.Data.csproj", "{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenWeather", "OpenWeather\OpenWeather.csproj", "{33720403-BF50-47A5-80F7-0F66265687DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,26 +18,6 @@ Global
 		Windows|Any CPU = Windows|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Android|Any CPU.ActiveCfg = Android|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Android|Any CPU.Build.0 = Android|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Linux|Any CPU.ActiveCfg = Linux|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Linux|Any CPU.Build.0 = Linux|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Release|Any CPU.ActiveCfg = Linux|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Release|Any CPU.Build.0 = Linux|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Windows|Any CPU.ActiveCfg = Windows|Any CPU
-		{0DA50D04-9E80-4C45-97EA-5615F1B2CF02}.Windows|Any CPU.Build.0 = Windows|Any CPU
-		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Android|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Android|Any CPU.Build.0 = Debug|Any CPU
-		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Linux|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Linux|Any CPU.Build.0 = Debug|Any CPU
-		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Windows|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7210412-22CE-4C5C-8B63-4FFB7A8CFFF7}.Windows|Any CPU.Build.0 = Debug|Any CPU
 		{9AEEB1C6-ACBA-4396-A306-1F6FE1AF5FA1}.Android|Any CPU.ActiveCfg = Debug|Any CPU
 		{9AEEB1C6-ACBA-4396-A306-1F6FE1AF5FA1}.Android|Any CPU.Build.0 = Debug|Any CPU
 		{9AEEB1C6-ACBA-4396-A306-1F6FE1AF5FA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -52,16 +28,16 @@ Global
 		{9AEEB1C6-ACBA-4396-A306-1F6FE1AF5FA1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9AEEB1C6-ACBA-4396-A306-1F6FE1AF5FA1}.Windows|Any CPU.ActiveCfg = Debug|Any CPU
 		{9AEEB1C6-ACBA-4396-A306-1F6FE1AF5FA1}.Windows|Any CPU.Build.0 = Debug|Any CPU
-		{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}.Android|Any CPU.ActiveCfg = Debug|Any CPU
-		{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}.Android|Any CPU.Build.0 = Debug|Any CPU
-		{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}.Linux|Any CPU.ActiveCfg = Debug|Any CPU
-		{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}.Linux|Any CPU.Build.0 = Debug|Any CPU
-		{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}.Windows|Any CPU.ActiveCfg = Debug|Any CPU
-		{82DD9C8D-52B2-4ADB-95A2-7269FCF866C9}.Windows|Any CPU.Build.0 = Debug|Any CPU
+		{33720403-BF50-47A5-80F7-0F66265687DE}.Android|Any CPU.ActiveCfg = Debug|Any CPU
+		{33720403-BF50-47A5-80F7-0F66265687DE}.Android|Any CPU.Build.0 = Debug|Any CPU
+		{33720403-BF50-47A5-80F7-0F66265687DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33720403-BF50-47A5-80F7-0F66265687DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33720403-BF50-47A5-80F7-0F66265687DE}.Linux|Any CPU.ActiveCfg = Debug|Any CPU
+		{33720403-BF50-47A5-80F7-0F66265687DE}.Linux|Any CPU.Build.0 = Debug|Any CPU
+		{33720403-BF50-47A5-80F7-0F66265687DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33720403-BF50-47A5-80F7-0F66265687DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33720403-BF50-47A5-80F7-0F66265687DE}.Windows|Any CPU.ActiveCfg = Debug|Any CPU
+		{33720403-BF50-47A5-80F7-0F66265687DE}.Windows|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

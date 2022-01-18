@@ -1,4 +1,4 @@
-﻿namespace OpenWeather.Data
+﻿namespace OpenWeather
 {
     /// <summary>
     /// Struct to hold station information
@@ -8,37 +8,39 @@
         /// <summary>
         /// Station ICAO code
         /// </summary>
-        public string ICAO { get; set; }
+        public readonly string ICAO;
 
         /// <summary>
         /// Station name
         /// </summary>
-        public string Name { get; set; }
+        public readonly string Name;
 
         /// <summary>
         /// The elevation of the weather station in meters
         /// </summary>
-        public int Elevation { get; set; }
+        public readonly int Elevation;
 
         /// <summary>
         /// Two character coutry code
         /// </summary>
-        public string Country { get; set; }
+        public readonly string Country;
 
         /// <summary>
         /// Two character state/region code
         /// </summary>
-        public string Region { get; set; }
+        public readonly string Region;
 
         /// <summary>
         /// The latitude of the station
         /// </summary>
-        public double Latitude { get; set; }
+        public readonly double Latitude;
 
         /// <summary>
         /// The logitude of the station
         /// </summary>
-        public double Longitude { get; set; }
+        public readonly double Longitude;
+
+        public Location Location => new Location(Latitude, Longitude);
 
         public StationInfo(string icao, string name, int elevation, string country, string region, double lat, double lon)
         {

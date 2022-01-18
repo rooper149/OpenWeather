@@ -1,6 +1,6 @@
-﻿namespace OpenWeather.Data
+﻿namespace OpenWeather
 {
-    public static class StationDictionary
+    public partial class StationDictionary
     {
         //last updated 29/11/2021 17:44:23 +00:00
         //generated from Greg Thompson's file at https://www.aviationweather.gov/docs/metar/stations.txt
@@ -1235,7 +1235,6 @@
             { @"KHLC", new StationInfo("KHLC", "HILL CITY", 667, "US", "KS", 39.36666, -99.83333) },
             { @"KHOX", new StationInfo("KHOX", "HOXIE", 833, "US", "KS", 39.36666, -100.43333) },
             { @"KHQG", new StationInfo("KHQG", "HUGOTON", 956, "US", "KS", 37.16666, -101.36666) },
-            { @"KHQG", new StationInfo("KHQG", "HUGOTON", 956, "US", "KS", 37.16666, -101.36666) },
             { @"KHUT", new StationInfo("KHUT", "HUTCHINSON", 464, "US", "KS", 38.06666, -97.86666) },
             { @"KIDP", new StationInfo("KIDP", "INDEPENDENCE", 252, "US", "KS", 37.16666, -95.78333) },
             { @"KJN8", new StationInfo("KJN8", "JENNINGS", 762, "US", "KS", 39.68333, -100.3) },
@@ -1255,7 +1254,6 @@
             { @"KAL8", new StationInfo("KAL8", "NEW ALMELO", 734, "US", "KS", 39.6, -100.11666) },
             { @"KEWK", new StationInfo("KEWK", "NEWTON", 468, "US", "KS", 38.04999, -97.26666) },
             { @"KNRN", new StationInfo("KNRN", "NORTON", 726, "US", "KS", 39.85, -99.9) },
-            { @"KOEL", new StationInfo("KOEL", "OAKLEY", 924, "US", "KS", 39.11666, -100.81666) },
             { @"KOEL", new StationInfo("KOEL", "OAKLEY", 924, "US", "KS", 39.11666, -100.81666) },
             { @"KOIN", new StationInfo("KOIN", "OBERLIN", 810, "US", "KS", 39.83333, -100.53333) },
             { @"KOJC", new StationInfo("KOJC", "OLATHE/EXECUTIVE", 328, "US", "KS", 38.85, -94.73333) },

@@ -57,9 +57,9 @@ public class Program
         Console.WriteLine(@"Stations parsed, generating C# Dictionary...");
 
         var sb = new StringBuilder();
-        sb.AppendLine(@"namespace OpenWeather.Data");
+        sb.AppendLine(@"namespace OpenWeather");
         sb.AppendLine(@"{");
-        sb.AppendLine(@"public static class StationDictionary");
+        sb.AppendLine(@"public partial class StationDictionary");
         sb.AppendLine(@"{");
         sb.AppendLine($@"//last updated {response.Content.Headers.LastModified}");
         sb.AppendLine($@"//generated from Greg Thompson's file at https://www.aviationweather.gov/docs/metar/stations.txt");
@@ -67,7 +67,7 @@ public class Program
         sb.AppendLine(@"public static Dictionary<string, StationInfo> _Dictionary = new()");
         sb.AppendLine(@"{");   
 
-        foreach(var station in stations)
+        foreach(var station in stations.DistinctBy(x => x.ICAO))//we don't want duplicates which seem to creep in sometimes
         {
             var elev = int.Parse(station.ELEV);
             var lat = DegreesMinutesToDecimal(station.LAT);
@@ -78,9 +78,9 @@ public class Program
         }
 
         sb.AppendLine(@"};}}");
-        File.WriteAllText(@"output.cs", sb.ToString());
+        File.WriteAllText(@"StationDictionary.cs", sb.ToString());
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine(@"Output saved to output.cs.");
+        Console.WriteLine(@"Output saved to StationDictionary.cs.");
         Console.ForegroundColor = ConsoleColor.Gray;
         Console.WriteLine(@"Return to exit.");
         Console.ReadLine();
@@ -94,6 +94,6 @@ public class Program
 
         var degrees = double.Parse(pointArray[0]);
         var minutes = double.Parse(pointArray[1]) / 60;
-        return Math.Truncate(((degrees + minutes) * multiplier) * 100000) / 100000;//truncate to 5 points
+        return Math.Truncate((degrees + minutes) * multiplier * 100000) / 100000;//truncate to 5 points
     }
 }
