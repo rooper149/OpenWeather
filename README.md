@@ -14,23 +14,32 @@ Our weather station lookup list is adapted from Greg Thompson's station list whi
 ### Getting Started
 It's easy to search for a station and start getting weather data!
 
-     private static void Main(string[] args)
+        static void Main(string[] args)
         {
-            //Optional, build the StationDataTable without any actions, otherwise it will be built upon first loopkup like below.
-            //On average, increases the first lookup time by 5 times. Obviously it's of no use in this application, but for an
-            //application that runs lookups at a later time, you could build the table at the start and have it ready for later 
-            (assuming you even want persistant lookup).
-            //StationLookup.ZeroActionInitialize();
+            var stationInfo = OpenWeather.StationDictionary.GetClosestStation(29.3389, -98.4717);
 
-            var station = MetarStationLookup.Instance.Lookup(-90, -180);
+            Console.WriteLine($@"Name: {stationInfo.Name}");
+            Console.WriteLine($@"ICAO: {stationInfo.ICAO}");
+            Console.WriteLine($@"Lat/Lon: {stationInfo.Latitude}, {stationInfo.Longitude}");
+            Console.WriteLine($@"Elevation: {stationInfo.Elevation}m");
+            Console.WriteLine($@"Country: {stationInfo.Country}");
+            Console.WriteLine($@"Region: {stationInfo.Region}");
 
-            Console.WriteLine($"Station: {station.GetStationInfo.Name}\n" +
-                              $"ICAO: {station.GetStationInfo.ICAO}\n" +
-                              $"Temperature: {station.Weather.Temperature} {station.Units.TemperatureUnit}\n" +
-                              $"Pressure: {station.Weather.Pressure} {station.Units.PressureUnit}\n" +
-                              $"Wind Speed: {station.Weather.WindSpeed} {station.Units.WindSpeedUnit}");
+            var metarStation = new OpenWeather.MetarStation(stationInfo);
+            metarStation.WeatherUpdated += MetarStation_WeatherUpdated;
 
             Console.ReadLine();
+        }
+
+        private static void MetarStation_WeatherUpdated(object? sender, OpenWeather.Weather e)
+        {
+            Console.WriteLine("\n\nCurrent METAR Report:");
+            Console.WriteLine($@"Temperature: {e.Temperature}C");
+            Console.WriteLine($@"Wind Heading: {e.WindHeading}");
+            Console.WriteLine($@"Wind Speed: {e.WindSpeed}Kts");
+            Console.WriteLine($@"Dewpoint: {e.Dewpoint}");
+            Console.WriteLine($@"Visibility: {e.Visibility}Km");
+            Console.WriteLine($@"Presure: {e.Pressure}Pa");
         }
 
 ### License
