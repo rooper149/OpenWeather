@@ -42,5 +42,7 @@ It's easy to search for a station and start getting weather data!
             Console.WriteLine($@"Presure: {e.Pressure}Pa");
         }
 
+![image](https://github.com/rooper149/OpenWeather/assets/2343056/7622c7be-73de-4c14-a935-e567d965f510)
+
 ### License
 OpenWeather is under the BSD 3-Clause License.
