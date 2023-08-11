@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -31,7 +31,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="UnitsNet" Version="4.113.0" />
+		<PackageReference Include="System.Reactive" Version="6.0.0" />
+		<PackageReference Include="System.Reactive.Linq" Version="6.0.0" />
+		<PackageReference Include="UnitsNet" Version="5.29.0" />
 	</ItemGroup>
 
 	<ItemGroup>

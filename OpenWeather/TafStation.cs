@@ -16,7 +16,7 @@ namespace OpenWeather
         /// <param name="longitude">Location longitude</param>
         /// <param name="autoUpdate">Sets whether to auto update data</param>
         /// <param name="updateNow">Sets whether to update data on object creation</param>
-        public TafStation(double latitude, double longitude, bool autoUpdate = false, bool updateNow = true) : base(new StationInfo(latitude, longitude), autoUpdate)
+        public TafStation(double latitude, double longitude, bool updateNow = true, bool autoUpdate = false) : base(new StationInfo(latitude, longitude), Settings._UpdateIntervalSeconds, autoUpdate)
         {
             if (updateNow) { UpdateNow(); }
         }
@@ -32,7 +32,7 @@ namespace OpenWeather
         protected override async Task<Weather?> FetchUpdate()
         {
             var client = new HttpClient();
-            client.DefaultRequestHeaders.UserAgent.ParseAdd($@"{nameof(OpenWeather)}/2.0");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(Settings._UserAgent);
             var result = await client.GetStringAsync(LookupUrl);
 
             if (string.IsNullOrEmpty(result)) { return null; }//we got nothing?
@@ -41,19 +41,27 @@ namespace OpenWeather
             var current = XmlTools.TruncateXDocument(doc, "data", "type", "current observations");
 
             var temp = GetElementAsDouble(XmlTools.GetElementContent("value", current, "parameters", "temperature"));
-            var dewpoint = GetElementAsDouble(((XElement)XmlTools.GetNode(current, "parameters", "temperature")?.NextNode!).Value);
-            var visibility = GetElementAsDouble(((XElement)XmlTools.GetNode(current, "parameters", "weather", "weather-conditions")?.NextNode!).Value);
             var windHeading = GetElementAsInt32(XmlTools.GetElementContent("value", current, "parameters", "direction"));
+            var dewpoint = GetElementAsDouble(((XElement)XmlTools.GetNode(current, "parameters", "temperature")?.NextNode!).Value);
             var windSpeed = GetElementAsDouble(((XElement)XmlTools.GetNode(current, "parameters", "wind-speed")?.NextNode!).Value);
             var pressure = GetElementAsDouble(XmlTools.GetElementContent("value", current, "parameters", "pressure")) / 0.0393700732914;
+            var visibility = GetElementAsDouble(((XElement)XmlTools.GetNode(current, "parameters", "weather", "weather-conditions")?.NextNode!).Value);
 
-            temp =  Temperature.From(temp!.Value, TemperatureUnit.DegreeFahrenheit).As(Units.TemperatureUnit);
+            if (temp is null || dewpoint is null || 
+                pressure is null || windSpeed is null ||
+                    windHeading is null || visibility is null)
+            {
+                return null;
+            }
+
             windSpeed = Speed.From(windSpeed!.Value, SpeedUnit.Knot).As(Units.WindSpeedUnit);
-            pressure = Pressure.From(pressure!.Value, PressureUnit.InchOfMercury).As(Units.PressureUnit);
             visibility = Length.From(visibility!.Value, LengthUnit.Mile).As(Units.VisibilityUnit);
-            Weather = new Weather(Units, temp.Value, dewpoint!.Value, windSpeed.Value, windHeading!.Value, pressure.Value, visibility.Value);
+            pressure = Pressure.From(pressure!.Value, PressureUnit.InchOfMercury).As(Units.PressureUnit);
+            temp =  Temperature.From(temp!.Value, TemperatureUnit.DegreeFahrenheit).As(Units.TemperatureUnit);
+
+            var weather = new Weather(Units, temp.Value, dewpoint!.Value, windSpeed.Value, windHeading!.Value, pressure.Value, visibility.Value);
             client.Dispose();
-            return Weather;
+            return weather;
         }
 
         protected override string GenerateLookupUrl() => $"http://forecast.weather.gov/MapClick.php?lat={StationInfo.Location.Latitude}&lon={StationInfo.Location.Longitude}&FcstType=dwml";
