@@ -16,7 +16,12 @@ It's easy to search for a station and start getting weather data!
 
         static void Main(string[] args)
         {
-            var stationInfo = OpenWeather.StationDictionary.GetClosestStation(29.3389, -98.4717);
+            // get the closest station to 29.3389, -98.4717 lat/lon
+            if(!OpenWeather.StationDictionary.TryGetClosestStation(29.3389, -98.4717, out var stationInfo))
+            {
+                Console.WriteLine($@"Could not find a station.");
+                return;
+            }
 
             Console.WriteLine($@"Name: {stationInfo.Name}");
             Console.WriteLine($@"ICAO: {stationInfo.ICAO}");
@@ -25,21 +30,23 @@ It's easy to search for a station and start getting weather data!
             Console.WriteLine($@"Country: {stationInfo.Country}");
             Console.WriteLine($@"Region: {stationInfo.Region}");
 
-            var metarStation = new OpenWeather.MetarStation(stationInfo);
-            metarStation.WeatherUpdated += MetarStation_WeatherUpdated;
+            // get a MetarStation and autoupdate every 30 minutes
+            // you can change this via Settings._UpdateIntervalSeconds = yourValue
+            var metarStation = stationInfo.AsMetarStation(true, true);
+
+            // subscribe to updates on the station
+            _ = metarStation.Subscribe(x =>
+            {
+                Console.WriteLine("\n\nCurrent METAR Report:");
+                Console.WriteLine($@"Temperature: {x.Temperature}C");
+                Console.WriteLine($@"Wind Heading: {x.WindHeading}");
+                Console.WriteLine($@"Wind Speed: {x.WindSpeed}Kts");
+                Console.WriteLine($@"Dewpoint: {x.Dewpoint}");
+                Console.WriteLine($@"Visibility: {x.Visibility}Km");
+                Console.WriteLine($@"Presure: {x.Pressure}Pa");
+            });
 
             Console.ReadLine();
-        }
-
-        private static void MetarStation_WeatherUpdated(object? sender, OpenWeather.Weather e)
-        {
-            Console.WriteLine("\n\nCurrent METAR Report:");
-            Console.WriteLine($@"Temperature: {e.Temperature}C");
-            Console.WriteLine($@"Wind Heading: {e.WindHeading}");
-            Console.WriteLine($@"Wind Speed: {e.WindSpeed}Kts");
-            Console.WriteLine($@"Dewpoint: {e.Dewpoint}");
-            Console.WriteLine($@"Visibility: {e.Visibility}Km");
-            Console.WriteLine($@"Presure: {e.Pressure}Pa");
         }
 
 ![image](https://github.com/rooper149/OpenWeather/assets/2343056/7622c7be-73de-4c14-a935-e567d965f510)
