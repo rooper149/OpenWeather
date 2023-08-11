@@ -1,6 +1,6 @@
 ﻿namespace StationListBuilder
 {
-    public struct Station
+    public readonly struct Station
     {
 
         public readonly string CD;      //2  chars

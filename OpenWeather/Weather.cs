@@ -1,6 +1,6 @@
 ﻿namespace OpenWeather
 {
-    public struct Weather
+    public readonly struct Weather
     {
         /// <summary>
         /// The units used for this measurment
@@ -59,7 +59,11 @@
 
         public Weather ConvertTo(Units units)
         {
-            return new Weather(units, Units.ConvertTemperature(units, Temperature), Dewpoint, Units.ConvertWindSpeed(units, WindSpeed), WindHeading, Units.ConvertPressure(units, Pressure), Units.ConvertDistance(units, Visibility));
+            return new Weather(units,
+                Units.ConvertTemperature(units, Temperature),
+                Dewpoint, Units.ConvertWindSpeed(units, WindSpeed),
+                WindHeading, Units.ConvertPressure(units, Pressure),
+                Units.ConvertDistance(units, Visibility));
         }
     }
 }

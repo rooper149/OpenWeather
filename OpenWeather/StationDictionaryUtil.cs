@@ -19,10 +19,14 @@ namespace OpenWeather
             return true;
         }
 
-        public static StationInfo GetClosestStation(double lat, double lon)
+        public static bool TryGetClosestStation(double lat, double lon, out StationInfo station)
         {
+            station = default;
+            if (!_Dictionary.Any()) { return false; }
+
             var location = new Location(lat, lon);
-            return _Dictionary.OrderBy(x => x.Value.Location.DistanceTo(location)).First().Value;
+            station = _Dictionary.OrderBy(x => x.Value.Location.DistanceTo(location)).First().Value;
+            return true;
         }
     }
 }
