@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Version>2.1.0</Version>
+		<Version>2.2.0</Version>
 		<Authors>Ryan S. Cooper</Authors>
 		<Description>An open source library for METAR data retrieval</Description>
 		<PackageProjectUrl>https://rooper149.github.io/OpenWeather/</PackageProjectUrl>
