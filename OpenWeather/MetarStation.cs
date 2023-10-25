@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Net.Http.Headers;
+using System.Xml.Linq;
 using UnitsNet;
 using UnitsNet.Units;
 
@@ -74,6 +75,7 @@ namespace OpenWeather
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.UserAgent.ParseAdd(Settings._UserAgent);
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
             var result = await client.GetStringAsync(LookupUrl);
 
             if (string.IsNullOrEmpty(result)) { return null; }//we got nothing?
@@ -85,7 +87,7 @@ namespace OpenWeather
             var pressure = GetElementAsDouble(XmlTools.GetElementContent("altim_in_hg", doc, "data", "METAR"));
             var windSpeed = GetElementAsDouble(XmlTools.GetElementContent("wind_speed_kt", doc, "data", "METAR"));
             var windHeading = GetElementAsInt32(XmlTools.GetElementContent("wind_dir_degrees", doc, "data", "METAR"));
-            var visibility = GetElementAsDouble(XmlTools.GetElementContent("visibility_statute_mi", doc, "data", "METAR"));
+            var visibility = GetElementAsDouble(new string(XmlTools.GetElementContent("visibility_statute_mi", doc, "data", "METAR")?.Where(char.IsDigit).ToArray()));
 
             if(temp is null || dewpoint is null ||
                 pressure is null || windSpeed is null ||
@@ -103,6 +105,6 @@ namespace OpenWeather
             return new Weather(Units, temp.Value, dewpoint!.Value, windSpeed.Value, windHeading!.Value, pressure.Value, visibility.Value);
         }
 
-        protected override string GenerateLookupUrl() => $"https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&stationString={StationInfo.ICAO}&hoursBeforeNow={HoursOfData}";
+        protected override string GenerateLookupUrl() => $"https://aviationweather.gov/cgi-bin/data/dataserver.php?requestType=retrieve&dataSource=metars&stationString={StationInfo.ICAO}&hoursBeforeNow={HoursOfData}&format=xml";
     }
 }
